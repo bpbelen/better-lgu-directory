@@ -34,6 +34,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Taytay, Rizal | — | [GitHub](https://github.com/zzelif/bettertaytay) | — | 🟡 Work in Progress | [@zzelif](https://github.com/zzelif) |
 | Olongapo City, Zambales | — | [GitHub](https://github.com/eyronjohn/betterolongapo) | — | 🟡 Work in Progress | [@eyronjohn](https://github.com/eyronjohn) |
 | Biñan, Laguna | — | [GitHub](https://github.com/Criflar/betterbinan) | — | 🔵 Planned | [@Criflar](https://github.com/Criflar), [@chiwasushuba](https://github.com/chiwasushuba) |
+| Tanay, Rizal | — | [GitHub](https://github.com/s4burieru/bettertanay) | — | 🟡 Work in Progress | [@s4burieru](https://github.com/s4burieru) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
