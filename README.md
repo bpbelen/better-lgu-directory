@@ -35,6 +35,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Olongapo City, Zambales | — | [GitHub](https://github.com/eyronjohn/betterolongapo) | — | 🟡 Work in Progress | [@eyronjohn](https://github.com/eyronjohn) |
 | Biñan, Laguna | — | [GitHub](https://github.com/Criflar/betterbinan) | — | 🔵 Planned | [@Criflar](https://github.com/Criflar), [@chiwasushuba](https://github.com/chiwasushuba) |
 | Tanay, Rizal | — | [GitHub](https://github.com/s4burieru/bettertanay) | — | 🟡 Work in Progress | [@s4burieru](https://github.com/s4burieru) |
+| Puerto Princesa City, Palawan | — | [GitHub](https://github.com/Kelxety/betterpuertoprincesa) | — | 🔵 Planned | [@kelxety](https://github.com/kelxety) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
