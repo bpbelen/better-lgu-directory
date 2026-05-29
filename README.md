@@ -79,9 +79,9 @@ These templates are provided by the community to help you get started quickly.
 Ready to build a transparency portal for your LGU? Read the full guide: **[How to Start Your Better LGU Portal](GUIDE.md)**
 
 The short version:
-1. Fork or clone a [community template](TEMPLATES.md)
-2. Open a PR to this repository to register your LGU (even if you're still planning)
-3. Build, launch, and keep it updated
+1. **Register your intent** — open a PR to add your LGU with a `🔵 Planned` status
+2. **Build** — pick a [community template](TEMPLATES.md), set up your `better[lguname]` repo, gather public data, and deploy to a `better[lguname].org` domain
+3. **Launch and maintain** — update your entry to `🟢 Active` once live, and keep the data current
 
 ---
 
