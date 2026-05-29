@@ -40,6 +40,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Hilongos, Leyte | — | [GitHub](https://github.com/rolpppp/betterhilongos) | — | 🟡 Work in Progress | [@rolpppp](https://github.com/rolpppp) |
 | Limay, Bataan | — | — | — | 🔵 Planned | [@frensenccruz](https://github.com/frensenccruz) |
 | San Jose, Antique | — | — | — | 🔵 Planned | [@bonfire404](https://github.com/bonfire404) |
+| Libmanan, Camarines Sur | — | [GitHub](https://github.com/enzox0/betterlibmanan) | — | 🔵 Planned | [@enzox0](https://github.com/enzox0) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
