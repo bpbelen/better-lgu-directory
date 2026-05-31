@@ -42,6 +42,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | San Jose, Antique | — | — | — | 🔵 Planned | [@bonfire404](https://github.com/bonfire404) |
 | Libmanan, Camarines Sur | — | [GitHub](https://github.com/enzox0/betterlibmanan) | — | 🟡 Work in Progress  | [@enzox0](https://github.com/enzox0) |
 | San Pascual, Masbate | — | [GitHub](https://github.com/marcuwynu23/bettersanpascualmasbate)| — | 🔵 Planned | [@marcuwynu23](https://github.com/marcuwynu23) |
+| Teresa, Rizal | — | — | — | 🔵 Planned | [@MewSeiren](https://github.com/MewSeiren) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
