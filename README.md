@@ -36,7 +36,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Biñan, Laguna | — | [GitHub](https://github.com/Criflar/betterbinan) | — | 🔵 Planned | [@Criflar](https://github.com/Criflar), [@chiwasushuba](https://github.com/chiwasushuba) |
 | Tanay, Rizal | — | [GitHub](https://github.com/s4burieru/bettertanay) | — | 🟡 Work in Progress | [@s4burieru](https://github.com/s4burieru) |
 | Puerto Princesa City, Palawan | — | [GitHub](https://github.com/Kelxety/betterpuertoprincesa) | — | 🔵 Planned | [@kelxety](https://github.com/kelxety) |
-| Iligan City, Lanao del Norte         | —                                                     | [GitHub](https://github.com/KishonShrill/BetterIligan)                         | [Facebook](https://www.facebook.com/BetterIligan.org/)            | 🔵 Planned | [@KishonShrill](https://github.com/KishonShrill)                                        |
+| Iligan City, Lanao del Norte | [betteriligancity.org](https://betteriligancity.org/) | [GitHub](https://github.com/KishonShrill/BetterIligan) | [Facebook](https://www.facebook.com/BetterIligan.org/) | 🟡 Work in Progress | [@KishonShrill](https://github.com/KishonShrill), [@Vantalim12](https://github.com/Vantalim12) |
 | Hilongos, Leyte | — | [GitHub](https://github.com/rolpppp/betterhilongos) | — | 🟡 Work in Progress | [@rolpppp](https://github.com/rolpppp) |
 | Limay, Bataan | — | — | — | 🔵 Planned | [@frensenccruz](https://github.com/frensenccruz) |
 | San Jose, Antique | — | — | — | 🔵 Planned | [@bonfire404](https://github.com/bonfire404) |
