@@ -35,7 +35,15 @@ You do not need permission from your LGU to build a transparency portal. Most of
 
 ---
 
-## Step 1 — Register Your Intent
+## Step 1 — Search the Directory First
+
+Before anything else, search the [directory](https://lgu.bettergov.ph) for your LGU. This avoids duplicating effort and connects you with people already working nearby.
+
+- **Found, with a repository (🟢 Active or 🟡 Work in Progress):** contribute to the existing portal instead of starting a new one. Open its repository, read its `README` and `CONTRIBUTING`, and pick up an open issue or send a pull request.
+- **Found, but 🔵 Planned or with no repository yet:** there is nothing to build on yet — reach out to the listed maintainer to team up and co-maintain.
+- **Not listed:** it is yours to start. Continue below.
+
+### Register Your Intent
 
 Open a Pull Request to [this repository](https://github.com/jmacj/better-lgu-directory) to add your LGU to the directory with a `🔵 Planned` status. This is the first concrete step and signals to your community that something is coming.
 
