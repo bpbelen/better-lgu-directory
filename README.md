@@ -1,6 +1,6 @@
 # BetterGov.ph — LGU Directory
 
-A community-maintained directory of **Better LGU** digital transparency portals across the Philippines. Each entry links to the LGU's portal, source repository, and Facebook page, along with its current maintenance status.
+A community-maintained directory of **Better LGU** digital transparency portals across the Philippines — find an existing portal before you build, contribute to one, or start your own. Each entry links to the LGU's portal, source repository, and Facebook page, along with its current maintenance status.
 
 ---
 
