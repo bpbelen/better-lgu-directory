@@ -124,47 +124,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add or update an LGU entry, co
 
 Content in this repository is licensed under [CC BY 4.0](LICENSE). Templates in linked repositories carry their own licenses.
 
-<style>
-/* Custom styles for filters and pagination */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.gap-4 { gap: 1rem; }
-.gap-3 { gap: 0.75rem; }
-.flex-1 { flex: 1 1 0%; }
-.w-full { width: 100%; }
-.max-w-4xl { max-width: 56rem; }
-.hidden { display: none; }
-.sm\:text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-.text-gray-400 { color: #9ca3af; }
-.text-gray-500 { color: #6b7280; }
-.text-gray-700 { color: #374151; }
-.text-gray-900 { color: #111827; }
-.bg-white { background-color: #ffffff; }
-.border { border-width: 1px; }
-.border-gray-100 { border-color: #f3f4f6; }
-.border-gray-200 { border-color: #e5e7eb; }
-.border-gray-300 { border-color: #d1d5db; }
-.rounded-xl { border-radius: 0.75rem; }
-.rounded-lg { border-radius: 0.5rem; }
-.shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
-.cursor-pointer { cursor: pointer; }
-.disabled\:opacity-50:disabled { opacity: 0.5; }
-.disabled\:cursor-not-allowed:disabled { cursor: not-allowed; }
-.transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-.transition-colors { transition-property: background-color, border-color, color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
-
-@media (min-width: 640px) {
-    .sm\:flex-row { flex-direction: row; }
-}
-
-@media (min-width: 768px) {
-    .md\:flex-row { flex-direction: row; }
-    .md\:w-64 { width: 16rem; }
-}
-</style>
-
 <!-- Search and Pagination Script -->
 <script>
 let currentPage = 1;
