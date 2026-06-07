@@ -45,6 +45,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Teresa, Rizal | — | — | — | 🔵 Planned | [@MewSeiren](https://github.com/MewSeiren) |
 | Atimonan, Quezon | — | [GitHub](https://github.com/EmsiPrds/betteratimonan)  | — | 🔵 Planned | [@EmsiPrds](https://github.com/EmsiPrds) |
 | Dinalupihan, Bataan | - | - | - | 🔵 Planned | [@dardeejay](https://github.com/dardeejay) |
+| Calamba, Laguna | — | — | — | 🔵 Planned | [@apajuan](https://github.com/apajuan) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
