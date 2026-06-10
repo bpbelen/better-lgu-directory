@@ -46,6 +46,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Atimonan, Quezon | — | [GitHub](https://github.com/EmsiPrds/betteratimonan)  | — | 🔵 Planned | [@EmsiPrds](https://github.com/EmsiPrds) |
 | Dinalupihan, Bataan | - | - | - | 🔵 Planned | [@dardeejay](https://github.com/dardeejay) |
 | Calamba, Laguna | — | — | — | 🔵 Planned | [@apajuan](https://github.com/apajuan) |
+| Cabanatuan City, Nueva Ecija | — | — | — | 🔵 Planned | [@joshuagemvicente](https://github.com/joshuagemvicente), [@iampoll](https://github.com/iampoll) |
 | Angeles City, Pampanga | — | [GitHub](https://github.com/ongods/betterangeles) | — | 🔵 Planned | [@ongods](https://github.com/ongods) |
 
 <!-- SYNC_LGU_TABLE_END -->
