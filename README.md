@@ -53,6 +53,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Piat, Cagayan Valley | — | — | — | 🔵 Planned | [@JoScripty](https://github.com/JoScripty) |
 | Alaminos City, Pangasinan | — | — | — | 🔵 Planned | [@ljsalcedo-dev](https://github.com/ljsalcedo-dev) |
 | Santo Tomas, Pangasinan | — | — | — | 🔵 Planned | [@PatrickTomas2](https://github.com/PatrickTomas2) |
+| Legazpi, Albay | — | — | — | 🔵 Planned | [@bpbelen](https://github.com/bpbelen) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
