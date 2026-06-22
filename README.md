@@ -54,6 +54,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Alaminos City, Pangasinan | — | — | — | 🔵 Planned | [@ljsalcedo-dev](https://github.com/ljsalcedo-dev) |
 | Santo Tomas, Pangasinan | — | — | — | 🔵 Planned | [@PatrickTomas2](https://github.com/PatrickTomas2) |
 | Legazpi, Albay | — | — | — | 🔵 Planned | [@bpbelen](https://github.com/bpbelen) |
+| Santa Barbara, Pangasinan | — | — | — | 🔵 Planned | [@JericoGarcia21](https://github.com/JericoGarcia21) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
