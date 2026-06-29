@@ -16,22 +16,41 @@ function parseTable(content, startMarker, endMarker) {
 
     const tableContent = content.substring(startIdx + startMarker.length, endIdx).trim();
     const rows = tableContent.split('\n').filter(row => row.trim().startsWith('|'));
-    
+
     // Skip header and separator
     const dataRows = rows.slice(2);
-    
-    return dataRows.map((row, index) => {
+
+    return dataRows.map((row) => {
         const cells = row.split('|').map(cell => cell.trim()).filter((_, i, arr) => i > 0 && i < arr.length - 1);
         return cells;
     });
+}
+
+function parseSocials(cell) {
+    if (!cell || cell === '-' || cell === '—' || cell === '–') {
+        return [];
+    }
+
+    const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/g;
+    const socials = [];
+    let match;
+
+    while ((match = linkPattern.exec(cell)) !== null) {
+        const label = match[1].trim();
+        const url = match[2].trim();
+        const platform = label.toLowerCase().trim();
+        socials.push({ platform, label, url });
+    }
+
+    return socials;
 }
 
 function validateLgu(cells, index) {
     if (cells.length < 6) {
         throw new Error(`LGU Table Row ${index + 1} is malformed (missing columns).`);
     }
-    const [name, domain, repo, facebook, status, maintainer] = cells;
-    
+    const [name, domain, repo, socialsCell, status, maintainer] = cells;
+
     if (!name || name === '—') {
         throw new Error(`LGU Table Row ${index + 1} is missing a name.`);
     }
@@ -40,7 +59,22 @@ function validateLgu(cells, index) {
         throw new Error(`LGU Table Row ${index + 1} has an invalid status: "${status}".`);
     }
 
-    return { name, domain, repo, facebook, status, maintainer };
+    const socials = parseSocials(socialsCell);
+
+    return { name, domain, repo, socials, status, maintainer };
+}
+
+function formatSocialsYaml(socials) {
+    if (socials.length === 0) {
+        return '  socials: []';
+    }
+    const lines = ['  socials:'];
+    for (const s of socials) {
+        lines.push(`    - platform: "${s.platform}"`);
+        lines.push(`      label: "${s.label}"`);
+        lines.push(`      url: "${s.url}"`);
+    }
+    return lines.join('\n');
 }
 
 try {
@@ -60,7 +94,14 @@ try {
 
     // Write to YAML
     const lguYaml = lgus.map(l => {
-        return `- name: "${l.name}"\n  domain: "${l.domain}"\n  repo: "${l.repo}"\n  facebook: "${l.facebook}"\n  status: "${l.status}"\n  maintainer: "${l.maintainer}"`;
+        return [
+            `- name: "${l.name}"`,
+            `  domain: "${l.domain}"`,
+            `  repo: "${l.repo}"`,
+            formatSocialsYaml(l.socials),
+            `  status: "${l.status}"`,
+            `  maintainer: "${l.maintainer}"`,
+        ].join('\n');
     }).join('\n');
 
     fs.writeFileSync(LGUS_DATA_PATH, lguYaml);
