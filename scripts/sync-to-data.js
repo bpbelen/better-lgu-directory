@@ -6,6 +6,13 @@ const LGUS_DATA_PATH = process.argv[2] || path.join(__dirname, '../_data/lgus.ym
 
 const VALID_STATUSES = ['🟢 Active', '🟡 Work in Progress', '🔴 Unmaintained', '🔵 Planned'];
 
+const EMPTY_MARKERS = ['', '-', '—', '–'];
+
+// Escape a value for safe embedding inside a double-quoted YAML scalar.
+function yamlStr(value) {
+    return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
 function parseTable(content, startMarker, endMarker) {
     const startIdx = content.indexOf(startMarker);
     const endIdx = content.indexOf(endMarker);
@@ -16,22 +23,42 @@ function parseTable(content, startMarker, endMarker) {
 
     const tableContent = content.substring(startIdx + startMarker.length, endIdx).trim();
     const rows = tableContent.split('\n').filter(row => row.trim().startsWith('|'));
-    
+
     // Skip header and separator
     const dataRows = rows.slice(2);
-    
-    return dataRows.map((row, index) => {
+
+    return dataRows.map((row) => {
         const cells = row.split('|').map(cell => cell.trim()).filter((_, i, arr) => i > 0 && i < arr.length - 1);
         return cells;
     });
+}
+
+function parseSocials(cell) {
+    if (EMPTY_MARKERS.includes(cell)) {
+        return [];
+    }
+
+    // URL group allows one level of nested parens, e.g. ..._(Philippines)
+    const linkPattern = /\[([^\]]+)\]\(([^)]*(?:\([^)]*\)[^)]*)*)\)/g;
+    const socials = [];
+    let match;
+
+    while ((match = linkPattern.exec(cell)) !== null) {
+        const label = match[1].trim();
+        const url = match[2].trim();
+        const platform = label.toLowerCase().trim();
+        socials.push({ platform, label, url });
+    }
+
+    return socials;
 }
 
 function validateLgu(cells, index) {
     if (cells.length < 6) {
         throw new Error(`LGU Table Row ${index + 1} is malformed (missing columns).`);
     }
-    const [name, domain, repo, facebook, status, maintainer] = cells;
-    
+    const [name, domain, repo, socialsCell, status, maintainer] = cells;
+
     if (!name || name === '—') {
         throw new Error(`LGU Table Row ${index + 1} is missing a name.`);
     }
@@ -40,7 +67,25 @@ function validateLgu(cells, index) {
         throw new Error(`LGU Table Row ${index + 1} has an invalid status: "${status}".`);
     }
 
-    return { name, domain, repo, facebook, status, maintainer };
+    const socials = parseSocials(socialsCell);
+    if (socials.length === 0 && !EMPTY_MARKERS.includes(socialsCell)) {
+        throw new Error(`LGU Table Row ${index + 1} has a Socials cell with no valid [label](url) links: "${socialsCell}".`);
+    }
+
+    return { name, domain, repo, socials, status, maintainer };
+}
+
+function formatSocialsYaml(socials) {
+    if (socials.length === 0) {
+        return '  socials: []';
+    }
+    const lines = ['  socials:'];
+    for (const s of socials) {
+        lines.push(`    - platform: "${yamlStr(s.platform)}"`);
+        lines.push(`      label: "${yamlStr(s.label)}"`);
+        lines.push(`      url: "${yamlStr(s.url)}"`);
+    }
+    return lines.join('\n');
 }
 
 try {
@@ -60,7 +105,14 @@ try {
 
     // Write to YAML
     const lguYaml = lgus.map(l => {
-        return `- name: "${l.name}"\n  domain: "${l.domain}"\n  repo: "${l.repo}"\n  facebook: "${l.facebook}"\n  status: "${l.status}"\n  maintainer: "${l.maintainer}"`;
+        return [
+            `- name: "${yamlStr(l.name)}"`,
+            `  domain: "${yamlStr(l.domain)}"`,
+            `  repo: "${yamlStr(l.repo)}"`,
+            formatSocialsYaml(l.socials),
+            `  status: "${yamlStr(l.status)}"`,
+            `  maintainer: "${yamlStr(l.maintainer)}"`,
+        ].join('\n');
     }).join('\n');
 
     fs.writeFileSync(LGUS_DATA_PATH, lguYaml);

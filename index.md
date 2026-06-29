@@ -4,7 +4,7 @@ title: Home
 ---
 # BetterGov.ph — LGU Directory
 
-A community-maintained directory of **Better LGU** digital transparency portals across the Philippines — find an existing portal before you build, contribute to one, or start your own. Each entry links to the LGU's portal, source repository, and Facebook page, along with its current maintenance status.
+A community-maintained directory of **Better LGU** digital transparency portals across the Philippines — find an existing portal before you build, contribute to one, or start your own. Each entry links to the LGU's portal, source repository, and social pages, along with its current maintenance status.
 
 ## 📋 Directory
 
@@ -31,9 +31,9 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 
 <div id="lgu-table-container" class="table-wrapper" markdown="1">
 
-| LGU                             | Domain                                                | Repository                                                                     | Facebook                                                           | Status    | Maintainer/s                                                                           |
+| LGU                             | Domain                                                | Repository                                                                     | Socials                                                            | Status    | Maintainer/s                                                                           |
 |---------------------------------|-------------------------------------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------|-----------|----------------------------------------------------------------------------------------|
-{% for lgu in site.data.lgus %}| {{ lgu.name }} | {{ lgu.domain }} | {{ lgu.repo }} | {{ lgu.facebook }} | {{ lgu.status }} | {{ lgu.maintainer }} |
+{% for lgu in site.data.lgus %}| {{ lgu.name }} | {{ lgu.domain }} | {{ lgu.repo }} | {% if lgu.socials and lgu.socials.size > 0 %}<div class="flex items-center gap-3 flex-wrap">{% for s in lgu.socials %}{% include social-icon.html label=s.label url=s.url %}{% endfor %}</div>{% else %}-{% endif %} | {{ lgu.status }} | {{ lgu.maintainer }} |
 {% endfor %}
 
 </div>
