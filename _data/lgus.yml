@@ -293,10 +293,10 @@
   status: "🔵 Planned"
   maintainer: "[@JoScripty](https://github.com/JoScripty)"
 - name: "Alaminos City, Pangasinan"
-  domain: "-"
-  repo: "-"
+  domain: "[betteralaminoscity.org](https://betteralaminoscity.org)"
+  repo: "[GitHub](https://github.com/ljsalcedo-dev/betteralaminoscity)"
   socials: []
-  status: "🔵 Planned"
+  status: "🟡 Work in Progress"
   maintainer: "[@ljsalcedo-dev](https://github.com/ljsalcedo-dev)"
 - name: "Santo Tomas, Pangasinan"
   domain: "-"
