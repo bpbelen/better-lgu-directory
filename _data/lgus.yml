@@ -209,7 +209,7 @@
     - platform: "facebook"
       label: "Facebook"
       url: "https://www.facebook.com/BetterIligan.org/"
-  status: "🟡 Work in Progress"
+  status: "🟢 Active"
   maintainer: "[@KishonShrill](https://github.com/KishonShrill), [@Vantalim12](https://github.com/Vantalim12)"
 - name: "Hilongos, Leyte"
   domain: "-"
