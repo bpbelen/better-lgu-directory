@@ -328,6 +328,12 @@
   socials: []
   status: "🟡 Work in Progress"
   maintainer: "[@SaraGugmaKo](https://github.com/SaraGugmaKo)"
+- name: "Bayawan, Negros Oriental"
+  domain: "-"
+  repo: "[GitHub](https://github.com/rodneydelacruz/betterbayawan)"
+  socials: []
+  status: "🔵 Planned"
+  maintainer: "[@rodneydelacruz](https://github.com/rodneydelacruz)"
 - name: "Bacoor City, Cavite"
   domain: "-"
   repo: "[Github](https://github.com/riamjs/betterbacoor)"
