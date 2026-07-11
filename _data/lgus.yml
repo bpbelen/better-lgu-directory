@@ -232,7 +232,10 @@
 - name: "Libmanan, Camarines Sur"
   domain: "-"
   repo: "[GitHub](https://github.com/enzox0/betterlibmanan)"
-  socials: []
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://www.facebook.com/BetterLibmanan.org"
   status: "🟡 Work in Progress"
   maintainer: "[@enzox0](https://github.com/enzox0)"
 - name: "San Pascual, Masbate"
