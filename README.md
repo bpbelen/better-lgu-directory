@@ -35,7 +35,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Taytay, Rizal | — | [GitHub](https://github.com/zzelif/bettertaytay) | — | 🟡 Work in Progress | [@zzelif](https://github.com/zzelif) |
 | Olongapo City, Zambales | [betterolongapo.org](https://betterolongapo.org/) | [GitHub](https://github.com/eyronjohn/betterolongapo) | — | 🟢 Active | [@eyronjohn](https://github.com/eyronjohn) |
 | Biñan, Laguna | — | [GitHub](https://github.com/Criflar/betterbinan) | — | 🔵 Planned | [@Criflar](https://github.com/Criflar), [@chiwasushuba](https://github.com/chiwasushuba) |
-| Tanay, Rizal | — | [GitHub](https://github.com/s4burieru/bettertanay) | — | 🟡 Work in Progress | [@s4burieru](https://github.com/s4burieru) |
+| Tanay, Rizal | [bettertanay.org](https://bettertanay.org) | [GitHub](https://github.com/s4burieru/bettertanay) | [Facebook](https://www.facebook.com/bettertanay) | 🟢 Active | [@s4burieru](https://github.com/s4burieru) |
 | Puerto Princesa City, Palawan | — | [GitHub](https://github.com/Kelxety/betterpuertoprincesa) | — | 🔵 Planned | [@kelxety](https://github.com/kelxety) |
 | Iligan City, Lanao del Norte | [betteriligancity.org](https://betteriligancity.org/) | [GitHub](https://github.com/KishonShrill/BetterIligan) | [Facebook](https://www.facebook.com/BetterIligan.org/) | 🟢 Active | [@KishonShrill](https://github.com/KishonShrill), [@Vantalim12](https://github.com/Vantalim12) |
 | Hilongos, Leyte | — | [GitHub](https://github.com/rolpppp/betterhilongos) | — | 🟡 Work in Progress | [@rolpppp](https://github.com/rolpppp) |
