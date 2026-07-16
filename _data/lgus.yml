@@ -191,10 +191,13 @@
   status: "🔵 Planned"
   maintainer: "[@Criflar](https://github.com/Criflar), [@chiwasushuba](https://github.com/chiwasushuba)"
 - name: "Tanay, Rizal"
-  domain: "-"
+  domain: "[bettertanay.org](https://bettertanay.org)"
   repo: "[GitHub](https://github.com/s4burieru/bettertanay)"
-  socials: []
-  status: "🟡 Work in Progress"
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://www.facebook.com/bettertanay"
+  status: "🟢 Active"
   maintainer: "[@s4burieru](https://github.com/s4burieru)"
 - name: "Puerto Princesa City, Palawan"
   domain: "-"
