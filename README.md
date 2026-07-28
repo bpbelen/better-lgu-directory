@@ -72,6 +72,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Calapan, Oriental Mindoro | - | [Github](https://github.com/arvingarciabtw/bettercalapan) | - | 🔵 Planned | [@arvingarciabtw](https://github.com/arvingarciabtw) |
 | Midsayap, North Cotabato | - | - | - | 🔵 Planned | [@PostNZT](https://github.com/PostNZT) |
 | Tandag City, Surigao del Sur | — | [Github](https://github.com/BetterTandag/better-tandag) | — | 🟡 Work in Progress | [@ikmespinoza](https://github.com/ikmespinoza) |
+| Baler, Aurora | - | - | - | 🔵 Planned | [@bjtecuico](https://github.com/bjtecuico) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
