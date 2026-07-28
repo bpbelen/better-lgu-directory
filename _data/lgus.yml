@@ -424,3 +424,9 @@
   socials: []
   status: "🔵 Planned"
   maintainer: "[@PostNZT](https://github.com/PostNZT)"
+- name: "Tandag City, Surigao del Sur"
+  domain: "-"
+  repo: "[Github](https://github.com/BetterTandag/better-tandag)"
+  socials: []
+  status: "🟡 Work in Progress"
+  maintainer: "[@ikmespinoza](https://github.com/ikmespinoza)"
