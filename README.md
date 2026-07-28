@@ -69,6 +69,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Bocaue, Bulacan | - | [Github](https://github.com/ericksondelacruz/betterbocaue) | - | 🟡 Work in Progress | [@ericksondelacruz](https://github.com/ericksondelacruz) |
 | General Mariano Alvarez, Cavite | - | - | - | 🔵 Planned | [@izxclyde](https://github.com/izxclyde) |
 | Meycauayan, Bulacan | - | [Github](https://github.com/shnflrsc/bettermeycauayan) | - | 🟡 Work in Progress | [@shnflrsc](https://github.com/shnflrsc) |
+| Calapan, Oriental Mindoro | - | [Github](https://github.com/arvingarciabtw/bettercalapan) | - | 🔵 Planned | [@arvingarciabtw](https://github.com/arvingarciabtw) |
 
 <!-- SYNC_LGU_TABLE_END -->
 
