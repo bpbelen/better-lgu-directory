@@ -382,6 +382,12 @@
   socials: []
   status: "🔵 Planned"
   maintainer: "[@glennmarkgarcia](https://github.com/glennmarkgarcia)"
+- name: "Aurora, Zamboanga del Sur"
+  domain: "[betteraurora.org](https://betteraurora.org)"
+  repo: "[Github](https://github.com/Jayke770/betteraurora)"
+  socials: []
+  status: "🟡 Work in Progress"
+  maintainer: "[@jayke770](https://github.com/jayke770)"
 - name: "Infanta, Quezon"
   domain: "-"
   repo: "-"
