@@ -436,3 +436,9 @@
   socials: []
   status: "🔵 Planned"
   maintainer: "[@bjtecuico](https://github.com/bjtecuico)"
+- name: "City of Manila, Metro Manila"
+  domain: "[bettermanila.org](https://bettermanila.org)"
+  repo: "[GitHub](https://github.com/grgdlm/bettermanila)"
+  socials: []
+  status: "🟡 Work in Progress"
+  maintainer: "[@grgdlm](https://github.com/grgdlm)"
