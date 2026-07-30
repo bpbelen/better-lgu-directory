@@ -448,3 +448,9 @@
   socials: []
   status: "🔵 Planned"
   maintainer: "[@stinkymonkeyph](https://github.com/stinkymonkeyph)"
+- name: "Aborlan, Palawan"
+  domain: "-"
+  repo: "[GitHub](https://github.com/BetterAborlan/betteraborlan)"
+  socials: []
+  status: "🟡 Work in Progress"
+  maintainer: "[@hmcldryl](https://github.com/hmcldryl)"
