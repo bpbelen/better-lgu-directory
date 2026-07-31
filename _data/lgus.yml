@@ -449,9 +449,12 @@
   status: "🔵 Planned"
   maintainer: "[@stinkymonkeyph](https://github.com/stinkymonkeyph)"
 - name: "Aborlan, Palawan"
-  domain: "-"
+  domain: "[betteraborlan.org](https://betteraborlan.org)"
   repo: "[GitHub](https://github.com/BetterAborlan/betteraborlan)"
-  socials: []
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://www.facebook.com/betteraborlan.org"
   status: "🟡 Work in Progress"
   maintainer: "[@hmcldryl](https://github.com/hmcldryl)"
 - name: "Quezon City, Metro Manila"
