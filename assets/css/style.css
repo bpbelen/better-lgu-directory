@@ -282,19 +282,23 @@ main tr:last-child td {
    hook available on those — see _includes/featured-portal.html). */
 .featured-portal-badge {
   /* Overlay pill on the image's top-left corner per #126's locked spec
-     (D/heropanel variant) — not an inline pill in the text body. #1d4ed8
-     is the spec's fixed value for this variant, not var(--color-primary-700)
-     (#003d8d), which is a different blue used elsewhere on the card. */
+     (D/heropanel variant) — not an inline pill in the text body. #2563eb
+     is #126's fixed value for this badge (the D variant just inverts fill
+     and text vs. the other variants), not var(--color-primary-700)
+     (#003d8d), which is a different blue used elsewhere on the card.
+     Inset bumped to 1rem (from the prototype's literal .65rem) — matches
+     the card's own `rounded-2xl` (1rem) radius, so the pill clears the
+     curve of the corner instead of crowding it (Jan, live visual check). */
   position: absolute;
-  top: 0.65rem;
-  left: 0.65rem;
+  top: 1rem;
+  left: 1rem;
   z-index: 2;
   display: inline-flex;
   align-items: center;
   padding: 0.25rem 0.75rem;
   border-radius: 999px;
   background-color: #fff;
-  color: #1d4ed8;
+  color: #2563eb;
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
