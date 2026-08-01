@@ -597,3 +597,11 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@brixavengoza](https://github.com/brixavengoza)"
+- name: "Kabugao, Apayao"
+  domain: "-"
+  repo: "[GitHub](https://github.com/KuyaLoy/betterkabugao)"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@KuyaLoy](https://github.com/KuyaLoy)"
