@@ -36,7 +36,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Olongapo City, Zambales | [betterolongapo.org](https://betterolongapo.org/) | [GitHub](https://github.com/eyronjohn/betterolongapo) | — | 🟢 Active | [@eyronjohn](https://github.com/eyronjohn) |
 | Biñan, Laguna | — | [GitHub](https://github.com/Criflar/betterbinan) | — | 🔵 Planned | [@Criflar](https://github.com/Criflar), [@chiwasushuba](https://github.com/chiwasushuba) |
 | Tanay, Rizal | [bettertanay.org](https://bettertanay.org) | [GitHub](https://github.com/s4burieru/bettertanay) | [Facebook](https://www.facebook.com/bettertanay) | 🟢 Active | [@s4burieru](https://github.com/s4burieru) |
-| Puerto Princesa City, Palawan | — | [GitHub](https://github.com/Kelxety/betterpuertoprincesa) | — | 🔵 Planned | [@kelxety](https://github.com/kelxety) |
+| Puerto Princesa City, Palawan | — | [GitHub](https://github.com/Kelxety/betterpuertoprincesa) | — | 🔵 Planned | [@kelxety](https://github.com/kelxety), [@hmcldryl](https://github.com/hmcldryl), [@atualariao](https://github.com/atualariao) |
 | Iligan City, Lanao del Norte | [betteriligancity.org](https://betteriligancity.org/) | [GitHub](https://github.com/KishonShrill/BetterIligan) | [Facebook](https://www.facebook.com/BetterIligan.org/) | 🟢 Active | [@KishonShrill](https://github.com/KishonShrill), [@Vantalim12](https://github.com/Vantalim12) |
 | Hilongos, Leyte | — | [GitHub](https://github.com/rolpppp/betterhilongos) | — | 🟡 Work in Progress | [@rolpppp](https://github.com/rolpppp) |
 | Limay, Bataan | [betterlimay.org](https://betterlimay.org/) | [Github](https://github.com/AstroMC98/betterlimay) | [Facebook](https://www.facebook.com/betterlimay.org) | 🟡 Work in Progress | [@AstroMC98](https://github.com/AstroMC98) |
@@ -46,14 +46,14 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | San Pascual, Masbate | — | [GitHub](https://github.com/marcuwynu23/bettersanpascualmasbate)| — | 🟡 Work in Progress | [@marcuwynu23](https://github.com/marcuwynu23) |
 | Teresa, Rizal | — | — | — | 🔵 Planned | [@MewSeiren](https://github.com/MewSeiren) |
 | Atimonan, Quezon | — | [GitHub](https://github.com/EmsiPrds/betteratimonan)  | — | 🟡 Work in Progress | [@EmsiPrds](https://github.com/EmsiPrds) |
-| Dinalupihan, Bataan | - | - | - | 🔵 Planned | [@dardeejay](https://github.com/dardeejay) |
+| Dinalupihan, Bataan | - | - | - | 🔵 Planned<br>⚠️ Stale | [@dardeejay](https://github.com/dardeejay)<br>🤝 Open for Adoption |
 | Calamba, Laguna | — | [GitHub](https://github.com/apajuan/bettercalamba) | — | 🟡 Work in Progress | [@apajuan](https://github.com/apajuan) |
 | Cabanatuan City, Nueva Ecija | [bettercabanatuan.org](https://bettercabanatuan.org) | [GitHub](https://github.com/BetterCabanatuan/bettercabanatuan) | [Facebook](https://www.facebook.com/bettercabanatuan.org) | 🟢 Active | [@joshuagemvicente](https://github.com/joshuagemvicente), [@iampoll](https://github.com/iampoll) |
 | Angeles City, Pampanga | — | [GitHub](https://github.com/ongods/betterangeles) | — | 🔵 Planned | [@ongods](https://github.com/ongods) |
 | Cebu City, Cebu | — | [GitHub](https://github.com/kyrenmearr/bettercebucity) | — | 🟡 Work in Progress | [@kyrenmearr](https://github.com/kyrenmearr) |
 | Piat, Cagayan Valley | — | [GitHub](https://github.com/JoScripty/betterpiat) | — | 🟡 Work in Progress | [@JoScripty](https://github.com/JoScripty) |
 | Alaminos City, Pangasinan | [betteralaminoscity.org](https://betteralaminoscity.org) | [GitHub](https://github.com/ljsalcedo-dev/betteralaminoscity) | — | 🟡 Work in Progress | [@ljsalcedo-dev](https://github.com/ljsalcedo-dev) |
-| Santo Tomas, Pangasinan | — | — | — | 🔵 Planned | [@PatrickTomas2](https://github.com/PatrickTomas2) |
+| Santo Tomas, Pangasinan | — | — | — | 🔵 Planned<br>⚠️ Stale | [@PatrickTomas2](https://github.com/PatrickTomas2)<br>🤝 Open for Adoption |
 | Legazpi, Albay | — | — | — | 🔵 Planned | [@bpbelen](https://github.com/bpbelen) |
 | Santa Barbara, Pangasinan | — | [GitHub](https://github.com/JericoGarcia21/better-santabarbara) | — | 🟡 Work in Progress | [@JericoGarcia21](https://github.com/JericoGarcia21) |
 | Taguig City, Metro Manila | — | [GitHub](https://github.com/plvzfq-rit/bettertaguig) | — | 🔵 Planned | [@plvzfq-rit](https://github.com/plvzfq-rit) |
@@ -92,6 +92,17 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | 🟡 Work in Progress | Under development, not yet publicly launched    |
 | 🔴 Unmaintained     | No longer being actively maintained             |
 | 🔵 Planned          | Registered intent — development not yet started |
+
+### Secondary Tags
+
+| Tag                  | Meaning                                                                             |
+|----------------------|-------------------------------------------------------------------------------------|
+| ⚠️ Stale             | A `🔵 Planned` entry with no directory activity for over 30 days                     |
+| 🤝 Open for Adoption | Anyone may take the entry on — as a takeover, or alongside the original maintainer   |
+
+**Adopting a stale entry?** Open a PR that updates the Maintainer/s column and removes both tags. The status can stay `🔵 Planned` — change it only when the work actually starts. Any discussion happens in that PR.
+
+Tags are applied by the repository maintainers during periodic reviews, never automatically — time since the last update is a prompt to look, not the only thing that decides it.
 
 ---
 

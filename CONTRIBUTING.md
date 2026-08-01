@@ -35,6 +35,8 @@ You do not need to have a finished portal to register. If you are planning to bu
    | 🟢 Active           | Publicly launched and actively maintained            |
    | 🔴 Unmaintained     | Previously active but no longer maintained           |
 
+   Keep a `🔵 Planned` entry moving. Planned entries that see no directory activity for over 30 days are tagged `⚠️ Stale` and `🤝 Open for Adoption` — see [Stale Entries](#stale-entries).
+
 4. **Open a Pull Request** with the title format:
 
    ```
@@ -56,6 +58,26 @@ If your LGU's status, domain, repository, or maintainer has changed:
    ```
    Update [LGU Name] — [brief reason, e.g. "status change to Active"]
    ```
+
+---
+
+## Stale Entries
+
+A `🔵 Planned` entry whose row has not changed in over 30 days is tagged `⚠️ Stale` in the Status column and `🤝 Open for Adoption` under its maintainer:
+
+```
+| Your LGU Name | - | - | - | 🔵 Planned<br>⚠️ Stale | [@yourhandle](https://github.com/yourhandle)<br>🤝 Open for Adoption |
+```
+
+The two tags always appear together, and only on `🔵 Planned` entries — the sync script rejects any other combination.
+
+**If it is your entry:** it is not a penalty and nothing is removed. Any update clears it — move to `🟡 Work in Progress`, add your repo link, or open a PR removing both tags to confirm you are still on it.
+
+**If you want to adopt one:** open a PR that updates the Maintainer/s column to your handle and removes the `⚠️ Stale` and `🤝 Open for Adoption` tags. That is the whole change — the status stays `🔵 Planned` until you actually start building, at which point you move it to `🟡 Work in Progress` as a normal update. No heads-up needed beforehand; if the adoption needs discussion, that happens in the PR. Taking over outright and collaborating with the original maintainer are both fine — list both handles if you are working together, or just yours if you are taking it on alone.
+
+Adopting resets the clock: the entry counts as updated from the day that PR merges, so it will not be re-tagged for another 30 days.
+
+The tags are applied by the repository maintainers during periodic reviews, never by automation. Elapsed time is what prompts a look, not the whole judgement — an entry with visible progress elsewhere will not be tagged just because its row has not changed.
 
 ---
 
