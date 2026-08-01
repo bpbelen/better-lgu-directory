@@ -21,7 +21,7 @@
   open_for_adoption: false
   maintainer: "[@mattenarle10](https://github.com/mattenarle10)"
 - name: "Calauan, Laguna"
-  domain: "[bettercaluan.org](https://bettercalauan.org)"
+  domain: "[bettercalauan.org](https://bettercalauan.org)"
   repo: "[GitHub](https://github.com/bettercalauan/bettercalauan/tree/react-typescript)"
   socials:
     - platform: "facebook"
