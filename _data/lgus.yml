@@ -621,3 +621,11 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@ikmespinoza](https://github.com/ikmespinoza)"
+- name: "San Mariano, Isabela"
+  domain: "-"
+  repo: "-"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@yazunom](https://github.com/yazunom)"
