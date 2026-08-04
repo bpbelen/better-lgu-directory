@@ -629,3 +629,11 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@yazunom](https://github.com/yazunom)"
+- name: "Pasig City, Metro Manila"
+  domain: "-"
+  repo: "[GitHub](https://github.com/ericvelasco-dev/betterpasig)"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@ericvelasco-dev](https://github.com/ericvelasco-dev)"
