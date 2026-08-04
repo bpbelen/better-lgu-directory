@@ -491,10 +491,10 @@
   open_for_adoption: false
   maintainer: "[@eljohn2001](https://github.com/eljohn2001)"
 - name: "Agoo, La Union"
-  domain: "-"
-  repo: "-"
+  domain: "[betteragoo.org](https://betteragoo.org/)"
+  repo: "[GitHub](https://github.com/glennmarkgarcia/betteragoo)"
   socials: []
-  status: "🔵 Planned"
+  status: "🟡 Work in Progress"
   stale: false
   open_for_adoption: false
   maintainer: "[@glennmarkgarcia](https://github.com/glennmarkgarcia)"
