@@ -64,7 +64,7 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Lucena City, Quezon | — | — | — | 🔵 Planned | [@marrrkkk](https://github.com/marrrkkk) |
 | Carigara, Leyte | — | — | — | 🔵 Planned | [@dauganz09](https://github.com/dauganz09) |  
 | Claver, Surigao del Norte | - | - | - | 🔵 Planned | [@eljohn2001](https://github.com/eljohn2001) |
-| Agoo, La Union | - | - | - | 🔵 Planned | [@glennmarkgarcia](https://github.com/glennmarkgarcia) |
+| Agoo, La Union | [betteragoo.org](https://betteragoo.org/) | [GitHub](https://github.com/glennmarkgarcia/betteragoo) | - | 🟡 Work in Progress | [@glennmarkgarcia](https://github.com/glennmarkgarcia) |
 | Aurora, Zamboanga del Sur | [betteraurora.org](https://betteraurora.org)  | [Github](https://github.com/Jayke770/betteraurora) | - | 🟡 Work in Progress | [@jayke770](https://github.com/jayke770) |
 | Infanta, Quezon | - | [Github](https://github.com/davisolpruvnik/betterinfanta) | - | 🟡 Work in Progress | [@davisolpruvnik](https://github.com/davisolpruvnik) |
 | Bocaue, Bulacan | - | [Github](https://github.com/ericksondelacruz/betterbocaue) | - | 🟡 Work in Progress | [@ericksondelacruz](https://github.com/ericksondelacruz) |
