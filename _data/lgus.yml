@@ -280,7 +280,7 @@
   maintainer: "[@rolpppp](https://github.com/rolpppp)"
 - name: "Limay, Bataan"
   domain: "[betterlimay.org](https://betterlimay.org/)"
-  repo: "[Github](https://github.com/AstroMC98/betterlimay)"
+  repo: "[GitHub](https://github.com/AstroMC98/betterlimay)"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -291,7 +291,7 @@
   maintainer: "[@AstroMC98](https://github.com/AstroMC98)"
 - name: "Balanga, Bataan"
   domain: "[betterbalanga.org](https://betterbalanga.org/)"
-  repo: "[Github](https://github.com/AstroMC98/betterbalanga)"
+  repo: "[GitHub](https://github.com/AstroMC98/betterbalanga)"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -460,7 +460,7 @@
   maintainer: "[@rodneydelacruz](https://github.com/rodneydelacruz)"
 - name: "Bacoor City, Cavite"
   domain: "-"
-  repo: "[Github](https://github.com/riamjs/betterbacoor)"
+  repo: "[GitHub](https://github.com/riamjs/betterbacoor)"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -500,7 +500,7 @@
   maintainer: "[@glennmarkgarcia](https://github.com/glennmarkgarcia)"
 - name: "Aurora, Zamboanga del Sur"
   domain: "[betteraurora.org](https://betteraurora.org)"
-  repo: "[Github](https://github.com/Jayke770/betteraurora)"
+  repo: "[GitHub](https://github.com/Jayke770/betteraurora)"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -508,7 +508,7 @@
   maintainer: "[@jayke770](https://github.com/jayke770)"
 - name: "Infanta, Quezon"
   domain: "-"
-  repo: "[Github](https://github.com/davisolpruvnik/betterinfanta)"
+  repo: "[GitHub](https://github.com/davisolpruvnik/betterinfanta)"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -516,7 +516,7 @@
   maintainer: "[@davisolpruvnik](https://github.com/davisolpruvnik)"
 - name: "Bocaue, Bulacan"
   domain: "-"
-  repo: "[Github](https://github.com/ericksondelacruz/betterbocaue)"
+  repo: "[GitHub](https://github.com/ericksondelacruz/betterbocaue)"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -532,7 +532,7 @@
   maintainer: "[@izxclyde](https://github.com/izxclyde)"
 - name: "Meycauayan, Bulacan"
   domain: "-"
-  repo: "[Github](https://github.com/shnflrsc/bettermeycauayan)"
+  repo: "[GitHub](https://github.com/shnflrsc/bettermeycauayan)"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -540,7 +540,7 @@
   maintainer: "[@shnflrsc](https://github.com/shnflrsc)"
 - name: "Calapan, Oriental Mindoro"
   domain: "[bettercalapan.org](https://bettercalapan.org)"
-  repo: "[Github](https://github.com/arvingarciabtw/bettercalapan)"
+  repo: "[GitHub](https://github.com/arvingarciabtw/bettercalapan)"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -556,7 +556,7 @@
   maintainer: "[@PostNZT](https://github.com/PostNZT)"
 - name: "Tandag City, Surigao del Sur"
   domain: "-"
-  repo: "[Github](https://github.com/BetterTandag/better-tandag)"
+  repo: "[GitHub](https://github.com/BetterTandag/better-tandag)"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
