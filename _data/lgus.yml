@@ -564,12 +564,12 @@
   maintainer: "[@ikmespinoza](https://github.com/ikmespinoza)"
 - name: "Baler, Aurora"
   domain: "-"
-  repo: "-"
+  repo: "[GitHub](https://github.com/tekwicks/betterbaler)"
   socials: []
-  status: "🔵 Planned"
+  status: "🟡 Work in Progress"
   stale: false
   open_for_adoption: false
-  maintainer: "[@bjtecuico](https://github.com/bjtecuico)"
+  maintainer: "[@tekwicks](https://github.com/tekwicks)"
 - name: "City of Manila, Metro Manila"
   domain: "[bettermanila.org](https://bettermanila.org)"
   repo: "[GitHub](https://github.com/grgdlm/bettermanila)"
