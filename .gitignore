@@ -24,3 +24,6 @@ Desktop.ini
 # Emacs
 *#
 .#*
+
+# Extracted by extract.py so test.js can check the real prototype source
+proto.check.js
