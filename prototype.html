@@ -65,6 +65,7 @@
     background:none; border:0; padding:0; cursor:pointer; text-align:left; width:fit-content;
   }
   .disclose:hover { text-decoration:underline; }
+  .disclose em { color:var(--gray-400); font-size:.7rem; font-style:normal; }
   .disclose[hidden] { display:none; }
   tr.stats-row td { background:var(--gray-50); padding-top:.5rem; padding-bottom:.75rem; }
   .stats { display:flex; gap:2rem; flex-wrap:wrap; font-size:.8rem; color:var(--gray-700); }
@@ -117,8 +118,11 @@
     confirm the skeleton reserves the same height and nothing reflows.
     “Repo unavailable” (404, private, deleted) and “rate-limited” both render a
     neutral <code>—</code>: never an error, never a status code.
-    <em>Show repo stats</em> is a stub for the future panel — that disclosure is what
-    gates the contributors call.
+    <em>Show repo stats</em> is <strong>not part of the initial implementation</strong>.
+    It exists here only to show that the Repository cell doesn’t dead-end when
+    contributors and stars arrive later — and that the disclosure is what will gate
+    the contributors call, which can’t afford to be per-row. v1 is the second line
+    and nothing else.
   </p>
 
 </div>
@@ -200,7 +204,7 @@ function render(sim) {
         <div class="repo-cell">
           ${repoLink(row)}
           ${activityHTML(row, sim === "mixed" ? mixedFor(i) : sim)}
-          ${row.repo ? `<button class="disclose" data-toggle="${i}">Show repo stats ▸</button>` : ""}
+          ${row.repo ? `<button class="disclose" data-toggle="${i}">Show repo stats ▸ <em>not in v1</em></button>` : ""}
         </div>
       </td>
       <td>-</td>

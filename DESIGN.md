@@ -214,9 +214,29 @@ never be conflated with it, or drive it (Q5).
 
 ---
 
-## Not decided / out of scope
+## Scope of the initial implementation
 
-- The stats panel itself — contributors, stars, disclosure UI. Deliberately later.
-- Wiring 404 detection into `check-stale.js` — follow-up.
+Only the last-commit line ships first. The stats panel is the *destination* that
+justified the client-side architecture (see above) — it is not part of v1.
+
+**In v1:**
+
+- `sync-to-data.js` emits structured `owner`/`repo`; `index.md` stamps `data-repo`
+- The reserved-height second line inside the Repository cell
+- One `/repos/{owner}/{repo}` call per visible repo, reading `pushed_at`
+- `localStorage` cache with the age-based TTL, ETag revalidation, in-flight dedupe
+- Concurrency queue (2–3 in flight)
+- IntersectionObserver + pagination gating
+- Three cell states: loading skeleton, `<time>` value, neutral `—`
+- The **Repository activity** entry added to `CONTEXT.md` — it lands here, with the
+  implementation, because only then does it describe something that exists
+
+**Not in v1:**
+
+- The `Show repo stats ▸` disclosure and the expanded stats row. These appear in
+  `prototype.html` **only to prove the Repository cell doesn't dead-end** when
+  stats arrive. Do not build them from the prototype.
+- Contributors (needs a second endpoint) and stars
+- Routing 404 detection into `check-stale.js` — follow-up
 - Any automated status or `⚠️ Stale` change driven by repository activity — ruled
-  out at Q5.
+  out at Q5
