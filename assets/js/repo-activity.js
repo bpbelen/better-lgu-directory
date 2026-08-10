@@ -6,9 +6,10 @@
 // This is a plain script (no bundler/build step on this branch), so it's
 // wrapped in an IIFE and attaches nothing to `window` except through the
 // DOM it renders into. The handful of pure functions (bucket/exactDate/
-// ttlMs/isFresh) are exported via `module.exports` when running under
-// Node, purely so scripts/test-repo-activity.js can exercise them with
-// zero dependencies — that branch of the export never runs in the browser.
+// ttlMs/isFresh/renderEmpty) are exported via `module.exports` when running
+// under Node, purely so scripts/test-repo-activity-site.js can exercise them
+// with zero dependencies — that branch of the export never runs in the
+// browser.
 (function () {
     'use strict';
 
@@ -46,6 +47,37 @@
 
     function exactDate(iso) {
         return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    // Terminal-failure rendering: rate-limited, network error, 404, or any
+    // other case where a value could not be obtained. Clears the cell and
+    // adds a modifier class that collapses `.repo-activity`'s min-height
+    // reservation, so the row reads identically to one with no repo link at
+    // all — no "—" placeholder sitting off-centre next to the GitHub link
+    // (Jan, 2026-08-10, overriding #162's original "renders a neutral —"
+    // acceptance criterion). The min-height reservation still holds for the
+    // loading→value path (that's what keeps the skeleton-then-value swap
+    // reflow-free); collapsing it only for this state means a row that
+    // fails after showing its skeleton DOES reflow — an accepted trade-off.
+    //
+    // Collapsing the span alone is NOT enough: index.md emits a build-time
+    // `<br>` before `.repo-activity` whenever `repo_owner` is set — it knows
+    // nothing about a runtime fetch failure, so it still forces a line
+    // break and generates a line box at the parent's line-height even with
+    // the span itself at zero height. `display: none` on that preceding
+    // `<br>` suppresses the break in every current engine, which is what
+    // actually gets the cell back to a single line — the span collapse
+    // alone only removed its own reserved height.
+    //
+    // A pure DOM-shape function (only touches `.textContent`,
+    // `.classList.add`, `.previousSibling`, and a style property), so it's
+    // exercised under Node with a plain mock object in
+    // scripts/test-repo-activity-site.js — no real DOM needed.
+    function renderEmpty(el) {
+        el.textContent = '';
+        el.classList.add('repo-activity-empty');
+        var prev = el.previousSibling;
+        if (prev && prev.nodeName === 'BR') prev.style.display = 'none';
     }
 
     // Cache TTL as a function of the *commit's* age, not the cache entry's
@@ -175,7 +207,7 @@
                         if (!res.ok) {
                             // Rate-limited (403/429) or any other non-ok
                             // status: fall back to stale cache if we have
-                            // one, else render neutral — never surface the
+                            // one, else render blank — never surface the
                             // status code.
                             return cached;
                         }
@@ -190,23 +222,21 @@
                         });
                     })
                     .catch(function () {
-                        // Network error: same neutral fallback as rate-limited.
+                        // Network error: same blank fallback as rate-limited.
                         return cached;
                     });
             }
 
-            // ---- rendering: three states, matching prototype.html. The
-            // observed/handled element (`.repo-activity[data-repo]`) IS the
-            // line to fill — a sibling of the repo link after a <br>, not a
-            // wrapper around it, so kramdown's markdown parsing of
-            // {{ lgu.repo }} is never touched by this script. ----
+            // ---- rendering: three states. The observed/handled element
+            // (`.repo-activity[data-repo]`) IS the line to fill — a sibling
+            // of the repo link after a <br>, not a wrapper around it, so
+            // kramdown's markdown parsing of {{ lgu.repo }} is never
+            // touched by this script. The terminal-failure state
+            // (renderEmpty) is defined above as a pure function so it can
+            // be unit tested. ----
 
             function renderLoading(el) {
                 el.innerHTML = '<span class="repo-activity-skeleton" aria-hidden="true"></span>';
-            }
-
-            function renderNone(el) {
-                el.innerHTML = '<span class="repo-activity-none">—</span>';
             }
 
             function renderValue(el, iso) {
@@ -227,7 +257,7 @@
                 // Fast path: a fresh cache entry needs no network at all —
                 // satisfies "repeat visits within the TTL make no request."
                 if (cached && isFresh(cached)) {
-                    if (cached.notFound) renderNone(el); else renderValue(el, cached.pushedAt);
+                    if (cached.notFound) renderEmpty(el); else renderValue(el, cached.pushedAt);
                     return;
                 }
 
@@ -237,7 +267,7 @@
                 var repo = slug.slice(slashIndex + 1);
                 fetchActivity(owner, repo).then(function (entry) {
                     if (!entry || entry.notFound || !entry.pushedAt) {
-                        renderNone(el);
+                        renderEmpty(el);
                         return;
                     }
                     renderValue(el, entry.pushedAt);
@@ -281,6 +311,6 @@
     }
 
     if (typeof module !== 'undefined' && module.exports) {
-        module.exports = { bucket: bucket, exactDate: exactDate, ttlMs: ttlMs, isFresh: isFresh };
+        module.exports = { bucket: bucket, exactDate: exactDate, ttlMs: ttlMs, isFresh: isFresh, renderEmpty: renderEmpty };
     }
 })();

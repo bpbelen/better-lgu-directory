@@ -25,7 +25,7 @@
 // same path, unrelated content, guaranteed conflict otherwise.
 
 const assert = require('assert');
-const { bucket, exactDate, ttlMs, isFresh } = require('../assets/js/repo-activity.js');
+const { bucket, exactDate, ttlMs, isFresh, renderEmpty } = require('../assets/js/repo-activity.js');
 
 let assertions = 0;
 function check(condition, message) {
@@ -99,6 +99,68 @@ check(isFresh({}, NOW) === false, 'a malformed cache entry (no fetchedAt) is nev
     const notFound = { notFound: true, fetchedAt: NOW };
     check(isFresh(notFound, NOW + 6 * DAY_MS) === true, 'a cached 404 result stays fresh for up to 7 days');
     check(isFresh(notFound, NOW + 8 * DAY_MS) === false, 'a cached 404 result goes stale after 7 days, so it gets re-checked eventually');
+}
+
+// --- renderEmpty: terminal-failure rendering (blank, not "—") -----------
+//
+// Rate-limited, network error, 404, or any other unfetchable case (Jan,
+// 2026-08-10, overriding #162's original "renders a neutral —" AC — the
+// dash sat off-centre next to the GitHub link). A minimal mock element
+// stands in for a real DOM node — renderEmpty only touches .textContent,
+// .classList.add, and .previousSibling (+ that sibling's .style.display),
+// so no jsdom/browser dependency is needed here.
+function mockRepoActivityEl(initialText, previousSibling) {
+    const classes = new Set();
+    return {
+        textContent: initialText,
+        classList: { add: (c) => classes.add(c), has: (c) => classes.has(c) },
+        previousSibling: previousSibling === undefined ? null : previousSibling,
+        _classes: classes,
+    };
+}
+
+{
+    const el = mockRepoActivityEl('');
+    renderEmpty(el);
+    check(el.textContent === '', 'renderEmpty leaves the cell with no text content — no "—" placeholder');
+    check(el.classList.has('repo-activity-empty'), 'renderEmpty adds the repo-activity-empty modifier class, so CSS can collapse the min-height reservation');
+}
+{
+    // Simulates the skeleton-then-failure path: loading left markup behind,
+    // renderEmpty must still fully clear it, not just append.
+    const el = mockRepoActivityEl('<span class="repo-activity-skeleton" aria-hidden="true"></span>');
+    renderEmpty(el);
+    check(el.textContent === '', 'renderEmpty clears prior skeleton content, not just appends to it');
+}
+{
+    // The real DOM shape: index.md always emits a <br> immediately before
+    // .repo-activity when repo_owner is set. That <br> is decided at build
+    // time and knows nothing about a runtime fetch failure, so collapsing
+    // the span's own height alone still leaves a forced line break and a
+    // second line box. renderEmpty must also hide that <br>, or the cell
+    // stays two lines tall and the GitHub link stays off-centre.
+    const br = { nodeName: 'BR', style: {} };
+    const el = mockRepoActivityEl('', br);
+    renderEmpty(el);
+    check(br.style.display === 'none', 'renderEmpty hides a preceding <br> so it no longer forces a line break');
+}
+{
+    // previousSibling can be a text node (e.g. surrounding whitespace) —
+    // renderEmpty must not touch it or throw.
+    const textNode = { nodeName: '#text', data: ' ' };
+    const el = mockRepoActivityEl('', textNode);
+    let threw = false;
+    try { renderEmpty(el); } catch (e) { threw = true; }
+    check(threw === false, 'renderEmpty does not throw when previousSibling is a text node');
+    check(textNode.style === undefined, 'renderEmpty leaves a non-BR previousSibling untouched');
+}
+{
+    // previousSibling can be null (first child, or no siblings at all) —
+    // renderEmpty must not throw.
+    const el = mockRepoActivityEl('', null);
+    let threw = false;
+    try { renderEmpty(el); } catch (e) { threw = true; }
+    check(threw === false, 'renderEmpty does not throw when previousSibling is null');
 }
 
 console.log(`✅ ${assertions} assertions passed.`);
