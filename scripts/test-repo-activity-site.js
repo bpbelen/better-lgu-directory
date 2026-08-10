@@ -4,7 +4,7 @@
 // this is a plain Node script using the built-in `assert` module, following
 // the scripts/test-rotation-index.js pattern. Run with:
 //
-//   node scripts/test-repo-activity.js
+//   node scripts/test-repo-activity-site.js
 //
 // It exits non-zero on any failure.
 //
@@ -14,10 +14,15 @@
 // `main-pages` side: the pure bucket/exactDate/ttlMs/isFresh functions
 // exported from assets/js/repo-activity.js. The repo-URL parsing
 // (parseRepoCell in scripts/sync-to-data.js) lives on `main` and is covered
-// by that branch's own scripts/test-repo-activity.js — it cannot be
+// by that branch's own scripts/test-repo-activity-data.js — it cannot be
 // required from here since main-pages has no sync-to-data.js parser logic
 // for it (main-pages's copy is a mirror kept in sync by the automated merge,
 // not a place new tests are added).
+//
+// Named `-site` (not the bare `test-repo-activity.js` this file and #163's
+// companion both originally used) specifically so the two don't collide
+// when sync-to-pages.yml's `git merge origin/main` runs after both land —
+// same path, unrelated content, guaranteed conflict otherwise.
 
 const assert = require('assert');
 const { bucket, exactDate, ttlMs, isFresh } = require('../assets/js/repo-activity.js');
