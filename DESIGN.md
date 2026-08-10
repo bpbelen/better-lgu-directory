@@ -3,6 +3,8 @@
 Outcome of a `/grill-with-docs` session. Nothing here is built yet; this is the
 agreed design, recorded so implementation doesn't re-litigate it.
 
+**Implementation ticket:** [#162](https://github.com/jmacj/better-lgu-directory/issues/162)
+
 **The ask:** show when the repository behind each Better LGU portal was last
 updated, in the directory.
 
