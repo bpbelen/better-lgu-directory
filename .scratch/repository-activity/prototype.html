@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype — Repository activity in the directory row</title>
+<style>
+  :root {
+    --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db;
+    --gray-400:#9ca3af; --gray-500:#6b7280; --gray-700:#374151; --gray-900:#111827;
+    --blue-600:#2563eb; --blue-700:#1d4ed8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; padding:2rem 1.5rem 6rem;
+    font-family: Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--gray-900); background:#fff; line-height:1.5;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  h1 { font-size:1.5rem; margin:0 0 .25rem; }
+  .sub { color: var(--gray-500); margin:0 0 1.5rem; font-size:.9rem; }
+
+  .panel {
+    background: var(--gray-50); border:1px solid var(--gray-200); border-radius:.75rem;
+    padding:1rem; margin-bottom:1.5rem; display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;
+  }
+  .panel fieldset { border:0; margin:0; padding:0; display:flex; gap:.5rem; align-items:center; }
+  .panel legend { float:left; font-size:.75rem; text-transform:uppercase; letter-spacing:.04em;
+    color: var(--gray-500); font-weight:600; margin-right:.75rem; }
+  button.state {
+    font: inherit; font-size:.85rem; padding:.35rem .75rem; cursor:pointer;
+    border:1px solid var(--gray-300); background:#fff; border-radius:.5rem;
+  }
+  button.state[aria-pressed="true"] { background: var(--blue-600); border-color: var(--blue-600); color:#fff; }
+
+  .table-wrapper { overflow-x:auto; border:1px solid var(--gray-200); border-radius:.75rem; }
+  table { border-collapse: collapse; width:100%; font-size:.875rem; }
+  th, td { text-align:left; padding:.75rem 1rem; border-bottom:1px solid var(--gray-200); vertical-align:top; }
+  th { background: var(--gray-50); font-weight:600; white-space:nowrap; }
+  tbody tr:last-child td { border-bottom:0; }
+  a { color: var(--blue-600); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+
+  /* ---- the thing being prototyped ---------------------------------- */
+
+  /* Reserve the second line's height from the start so injecting the value
+     never reflows the table. This is why the cell is a fixed-height stack. */
+  .repo-cell { display:flex; flex-direction:column; gap:.2rem; min-width:11rem; }
+  .repo-activity { min-height:1.15rem; font-size:.775rem; line-height:1.15rem; color: var(--gray-500); }
+  .repo-activity time { border-bottom:1px dotted var(--gray-400); cursor:help; }
+  .repo-activity .none { color: var(--gray-400); }
+
+  /* loading skeleton, same height as the real line */
+  .skeleton {
+    display:inline-block; width:8.5rem; height:.7rem; border-radius:.25rem;
+    background:linear-gradient(90deg,var(--gray-200) 25%,var(--gray-100) 37%,var(--gray-200) 63%);
+    background-size:400% 100%; animation: shimmer 1.4s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0% { background-position:100% 0 } 100% { background-position:0 0 } }
+  @media (prefers-reduced-motion: reduce) { .skeleton { animation:none } }
+
+  /* forward path: disclosure for the future stats panel */
+  .disclose {
+    margin-top:.15rem; font:inherit; font-size:.75rem; color:var(--blue-600);
+    background:none; border:0; padding:0; cursor:pointer; text-align:left; width:fit-content;
+  }
+  .disclose:hover { text-decoration:underline; }
+  .disclose[hidden] { display:none; }
+  tr.stats-row td { background:var(--gray-50); padding-top:.5rem; padding-bottom:.75rem; }
+  .stats { display:flex; gap:2rem; flex-wrap:wrap; font-size:.8rem; color:var(--gray-700); }
+  .stats dt { font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; color:var(--gray-500); margin-bottom:.15rem; }
+  .stats dd { margin:0; font-weight:600; }
+  .stats .future { color:var(--gray-400); font-weight:400; font-style:italic; }
+
+  .note { margin-top:2rem; font-size:.8rem; color:var(--gray-500); max-width:65ch; }
+  .note code { background:var(--gray-100); padding:.1rem .3rem; border-radius:.25rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Repository activity — directory row prototype</h1>
+  <p class="sub">
+    Throwaway prototype. Answers one question: what does “last updated” look like
+    inside the Repository cell, in each state it can be in.
+  </p>
+
+  <div class="panel">
+    <fieldset>
+      <legend>Simulate</legend>
+      <button class="state" data-sim="loaded"      aria-pressed="true">Loaded</button>
+      <button class="state" data-sim="loading"     aria-pressed="false">Loading</button>
+      <button class="state" data-sim="ratelimited" aria-pressed="false">Rate-limited</button>
+      <button class="state" data-sim="mixed"       aria-pressed="false">Mixed (real-world)</button>
+    </fieldset>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>LGU</th><th>Domain</th><th>Repository</th>
+          <th>Socials</th><th>Status</th><th>Maintainer/s</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+  <p class="note">
+    <strong>What to look at.</strong> The second line under each GitHub link is the
+    whole feature — no 7th column, so <code>filterDirectory()</code>’s
+    <code>td[4]</code>/<code>td[5]</code> indexes are untouched. Hover a value for the
+    exact date (<code>title</code>); the visible string is computed from
+    <code>&lt;time datetime&gt;</code> at render, bucketed to day granularity so a
+    cached value can’t render a visibly wrong answer. Switch to <em>Loading</em> to
+    confirm the skeleton reserves the same height and nothing reflows.
+    “Repo unavailable” (404, private, deleted) and “rate-limited” both render a
+    neutral <code>—</code>: never an error, never a status code.
+    <em>Show repo stats</em> is a stub for the future panel — that disclosure is what
+    gates the contributors call.
+  </p>
+
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Fixture data. `pushed` is an offset in hours from now, so buckets stay
+// correct whenever this file is opened.
+// ---------------------------------------------------------------------------
+const FIXTURES = [
+  { name:"Solano, Nueva Vizcaya",       domain:"bettersolano.org",   repo:"BetterSolano/bettersolano",           status:"🟢 Active",           maint:"@ramonloganjr",  pushed: 3 },
+  { name:"Bacolod City, Negros Occ.",   domain:"betterbacolod.org",  repo:"betterbacolod/betterbacolod",         status:"🟢 Active",           maint:"@mattenarle10",  pushed: 30 },
+  { name:"Calauan, Laguna",             domain:"bettercalauan.org",  repo:"bettercalauan/bettercalauan",         status:"🟢 Active",           maint:"@xpall",         pushed: 72,  ref:"react-typescript" },
+  { name:"Ormoc City, Leyte",           domain:"betterormoc.org",    repo:null,                                  status:"🟢 Active",           maint:"-" },
+  { name:"Koronadal City, S. Cotabato", domain:"betterkoronadal.org",repo:"janineooak/betterkoronadal",          status:"🟡 Work in Progress", maint:"@janineooak",    pushed: 26*24 },
+  { name:"Taytay, Rizal",               domain:null,                 repo:"zzelif/bettertaytay",                 status:"🟡 Work in Progress", maint:"@zzelif",        pushed: 8*24 },
+  { name:"Bacoor City, Cavite",         domain:null,                 repo:"riamjs/betterbacoor",                 status:"🔵 Planned",          maint:"@riamjs",        pushed: 214*24 },
+  { name:"Angeles City, Pampanga",      domain:null,                 repo:"ongods/betterangeles",                status:"🔵 Planned",          maint:"@ongods",        pushed: null, reason:"gone" },
+  { name:"Dinalupihan, Bataan",         domain:null,                 repo:null,                                  status:"🔵 Planned",          maint:"@dardeejay" },
+];
+
+// ---------------------------------------------------------------------------
+// Display bucketing. Day granularity is deliberate: TTL is measured in hours,
+// so hour-level precision would be precision the cache cannot back.
+// ---------------------------------------------------------------------------
+function bucket(iso) {
+  const then = new Date(iso);
+  const days = Math.floor((Date.now() - then) / 86400000);
+  if (days <= 0) return "today";
+  if (days === 1) return "yesterday";
+  if (days < 7)   return days + " days ago";
+  if (days < 30)  { const w = Math.floor(days / 7);  return w + (w === 1 ? " week ago"  : " weeks ago"); }
+  if (days < 365) { const m = Math.floor(days / 30); return m + (m === 1 ? " month ago" : " months ago"); }
+  const y = Math.floor(days / 365);
+  return y + (y === 1 ? " year ago" : " years ago");
+}
+
+const exactDate = iso => new Date(iso).toLocaleDateString("en-US",
+  { year:"numeric", month:"long", day:"numeric" });
+
+// TTL as a function of the commit's age — see DESIGN.md. Shown here only so the
+// prototype documents the rule alongside the UI it constrains.
+function ttlHours(iso) {
+  const hrs = (Date.now() - new Date(iso)) / 3600000;
+  if (hrs < 24)      return 1;
+  if (hrs < 24 * 7)  return 6;
+  return 24 * 7;
+}
+
+// ---------------------------------------------------------------------------
+// Rendering
+// ---------------------------------------------------------------------------
+const cell = (html) => `<div class="repo-activity">${html}</div>`;
+
+function activityHTML(row, sim) {
+  if (!row.repo) return cell("");                               // no repo link at all
+  if (sim === "loading") return cell('<span class="skeleton"></span>');
+  if (sim === "ratelimited") return cell('<span class="none">—</span>');
+  if (row.pushed === null) return cell('<span class="none">—</span>'); // 404 / private
+  const iso = new Date(Date.now() - row.pushed * 3600000).toISOString();
+  return cell(
+    `Updated <time datetime="${iso}" title="${exactDate(iso)}">${bucket(iso)}</time>`
+    + `<span hidden data-ttl="${ttlHours(iso)}"></span>`
+  );
+}
+
+function repoLink(row) {
+  if (!row.repo) return "-";
+  const href = "https://github.com/" + row.repo + (row.ref ? "/tree/" + row.ref : "");
+  return `<a href="${href}" rel="noopener">GitHub</a>`;
+}
+
+function render(sim) {
+  document.getElementById("rows").innerHTML = FIXTURES.map((row, i) => `
+    <tr data-i="${i}"${row.repo ? ` data-repo="${row.repo}"` : ""}>
+      <td>${row.name}</td>
+      <td>${row.domain ? `<a href="https://${row.domain}" rel="noopener">${row.domain}</a>` : "-"}</td>
+      <td>
+        <div class="repo-cell">
+          ${repoLink(row)}
+          ${activityHTML(row, sim === "mixed" ? mixedFor(i) : sim)}
+          ${row.repo ? `<button class="disclose" data-toggle="${i}">Show repo stats ▸</button>` : ""}
+        </div>
+      </td>
+      <td>-</td>
+      <td>${row.status}</td>
+      <td>${row.maint}</td>
+    </tr>
+  `).join("");
+}
+
+// "Mixed" spreads states across rows the way a real page looks mid-scroll:
+// some resolved, some still in flight, one unavailable.
+const mixedFor = i => (i === 1 || i === 5) ? "loading" : "loaded";
+
+// Stub for the future stats panel. The disclosure exists to gate the
+// contributors call — a second endpoint that can't afford to be per-row.
+function toggleStats(i) {
+  const tr = document.querySelector(`tr[data-i="${i}"]`);
+  const open = tr.nextElementSibling?.classList.contains("stats-row");
+  if (open) { tr.nextElementSibling.remove(); return; }
+  const panel = document.createElement("tr");
+  panel.className = "stats-row";
+  panel.innerHTML = `<td colspan="6"><dl class="stats">
+      <div><dt>Last commit</dt><dd>${tr.querySelector("time")?.textContent ?? "—"}</dd></div>
+      <div><dt>Stars</dt><dd class="future">later — same API call</dd></div>
+      <div><dt>Contributors</dt><dd class="future">later — fetched on this expand only</dd></div>
+    </dl></td>`;
+  tr.after(panel);
+}
+
+document.addEventListener("click", (e) => {
+  const sim = e.target.closest("button.state");
+  if (sim) {
+    document.querySelectorAll("button.state")
+      .forEach(b => b.setAttribute("aria-pressed", String(b === sim)));
+    render(sim.dataset.sim);
+    return;
+  }
+  const dis = e.target.closest("button.disclose");
+  if (dis) toggleStats(dis.dataset.toggle);
+});
+
+render("loaded");
+</script>
+</body>
+</html>
