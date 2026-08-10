@@ -249,6 +249,47 @@ main tr:last-child td {
 .animate-fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
 .animate-slide-in { animation: slideIn 0.5s ease-out forwards; }
 
+/* Repository activity (#162) — second line inside the Repository cell,
+   after a <br> (same pattern as .lgu-tag below — a sibling element, not a
+   wrapper around the primary markdown-rendered link, so kramdown's normal
+   span-level parsing of {{ lgu.repo }} is untouched).
+   `.repo-activity` reserves its final height from the start via min-height
+   on an inline-block, so injecting the loading skeleton, then the real
+   value, never reflows the table — see DESIGN.md on
+   prototype/repo-activity-ui. */
+.repo-activity {
+  display: inline-block;
+  min-height: 1.1rem;
+  font-size: 0.75rem;
+  line-height: 1.1rem;
+  color: var(--color-gray-600);
+}
+
+.repo-activity time {
+  border-bottom: 1px dotted var(--color-gray-400);
+  cursor: help;
+}
+
+.repo-activity-none {
+  color: var(--color-gray-500);
+}
+
+.repo-activity-skeleton {
+  display: inline-block;
+  width: 7rem;
+  height: 0.65rem;
+  border-radius: 0.25rem;
+  background: linear-gradient(90deg, var(--color-gray-200) 25%, var(--color-gray-100) 37%, var(--color-gray-200) 63%);
+  background-size: 400% 100%;
+  animation: repoActivityShimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes repoActivityShimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .repo-activity-skeleton { animation: none; }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
