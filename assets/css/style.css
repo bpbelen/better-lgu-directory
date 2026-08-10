@@ -259,10 +259,16 @@ main tr:last-child td {
    prototype/repo-activity-ui. A terminal fetch failure (rate-limited,
    network error, 404) is the one path that deliberately opts OUT of that
    reservation via `.repo-activity-empty` (Jan, 2026-08-10) — it renders
-   nothing, so the row must read identically to one with no repo link at
+   nothing, so the row should read identically to one with no repo link at
    all, which means the space needs to collapse, not stay reserved. That
    one case DOES reflow after the skeleton; every other path stays
-   reflow-free. */
+   reflow-free.
+   Collapsing this span is NOT sufficient on its own: index.md still emits
+   a build-time `<br>` before this element whenever repo_owner is set, and
+   that `<br>` forces a line break regardless of the span's own height.
+   assets/js/repo-activity.js's renderEmpty() additionally sets that
+   preceding `<br>`'s `display: none` at the same time it adds this class —
+   the two only add up to "no repo link at all" together. */
 .repo-activity {
   display: inline-block;
   min-height: 1.1rem;

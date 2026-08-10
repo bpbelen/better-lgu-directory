@@ -60,12 +60,24 @@
     // reflow-free); collapsing it only for this state means a row that
     // fails after showing its skeleton DOES reflow — an accepted trade-off.
     //
-    // A pure DOM-shape function (only touches `.textContent` and
-    // `.classList.add`), so it's exercised under Node with a plain mock
-    // object in scripts/test-repo-activity-site.js — no real DOM needed.
+    // Collapsing the span alone is NOT enough: index.md emits a build-time
+    // `<br>` before `.repo-activity` whenever `repo_owner` is set — it knows
+    // nothing about a runtime fetch failure, so it still forces a line
+    // break and generates a line box at the parent's line-height even with
+    // the span itself at zero height. `display: none` on that preceding
+    // `<br>` suppresses the break in every current engine, which is what
+    // actually gets the cell back to a single line — the span collapse
+    // alone only removed its own reserved height.
+    //
+    // A pure DOM-shape function (only touches `.textContent`,
+    // `.classList.add`, `.previousSibling`, and a style property), so it's
+    // exercised under Node with a plain mock object in
+    // scripts/test-repo-activity-site.js — no real DOM needed.
     function renderEmpty(el) {
         el.textContent = '';
         el.classList.add('repo-activity-empty');
+        var prev = el.previousSibling;
+        if (prev && prev.nodeName === 'BR') prev.style.display = 'none';
     }
 
     // Cache TTL as a function of the *commit's* age, not the cache entry's
