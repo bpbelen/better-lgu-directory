@@ -64,8 +64,8 @@
   maintainer: "[@miconficker](https://github.com/miconficker)"
 - name: "Las Piñas City, Metro Manila"
   domain: "[betterlaspinas.org](https://betterlaspinas.org)"
-  repo: "[GitHub](https://github.com/jmacj/betterlaspinas)"
-  repo_owner: "jmacj"
+  repo: "[GitHub](https://github.com/betterlaspinas/betterlaspinas)"
+  repo_owner: "betterlaspinas"
   repo_name: "betterlaspinas"
   socials:
     - platform: "facebook"
