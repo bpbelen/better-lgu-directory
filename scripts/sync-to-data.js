@@ -41,7 +41,7 @@ function normalizeDash(value) {
 // see GUIDE.md/CONTRIBUTING.md context in #162). Anything else — a non-GitHub
 // host, a user/org profile URL with no repo segment, a malformed link — does
 // not match, and the Entry is treated as having no parseable repo.
-const GITHUB_REPO_URL_PATTERN = /^https:\/\/github\.com\/([^\/\s#?]+)\/([^\/\s#?]+?)(?:\/tree\/([^\s#?]+))?\/?$/;
+const GITHUB_REPO_URL_PATTERN = /^https:\/\/github\.com\/([^\/\s#?]+)\/([^\/\s#?]+?)(?:\/tree\/([^\s#?]+?))?\/?$/;
 
 // Parses the Repository cell's `[label](url)` markdown link into structured
 // owner/repo/ref, for #162 (repository activity). This is the *only* place

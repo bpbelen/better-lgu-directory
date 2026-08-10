@@ -3,7 +3,7 @@
 // either branch, so this is a plain Node script using the built-in `assert`
 // module, following the scripts/test-rotation-index.js pattern. Run with:
 //
-//   node scripts/test-repo-activity.js
+//   node scripts/test-repo-activity-data.js
 //
 // It exits non-zero on any failure.
 //
@@ -14,8 +14,14 @@
 // that reads a github.com repo URL out of README.md's Repository cell. The
 // display-bucket and cache-TTL rules (today/yesterday/N days/weeks/months,
 // and the 1h/6h/7d TTL bands) are browser-module logic that lives on
-// `main-pages` and are covered by that branch's own test file — they cannot
-// be required from here since main has no browser module to import.
+// `main-pages` and are covered by that branch's own test file
+// (scripts/test-repo-activity-site.js) — they cannot be required from here
+// since main has no browser module to import.
+//
+// Named `-data` (not the bare `test-repo-activity.js` the companion
+// `main-pages` PR (#164) originally used too) specifically so the two files
+// don't collide when sync-to-pages.yml's `git merge origin/main` runs after
+// both land — same path, unrelated content, guaranteed conflict otherwise.
 
 const assert = require('assert');
 const { parseRepoCell } = require('./sync-to-data.js');
@@ -63,6 +69,14 @@ check(parseRepoCell('[GitHub](https://gitlab.com/owner/repo)') === null, 'a look
 {
     const info = parseRepoCell('[GitHub](https://github.com/owner/repo/)');
     check(info.owner === 'owner' && info.repo === 'repo', 'a trailing slash on a canonical link does not corrupt the repo name');
+}
+{
+    // Regression: the ref-capture group used to be greedy and would swallow
+    // a trailing slash into the ref itself (ref === "react-typescript/").
+    // Doesn't affect today's real README (the one pinned entry has no
+    // trailing slash) but is a real bug in the parser — caught in review.
+    const info = parseRepoCell('[GitHub](https://github.com/owner/repo/tree/react-typescript/)');
+    check(info.ref === 'react-typescript', 'a trailing slash after a pinned /tree/<ref> does not get folded into the ref');
 }
 
 // --- purity: repeated calls on the same input agree (no hidden state) -------
