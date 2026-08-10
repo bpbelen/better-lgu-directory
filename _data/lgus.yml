@@ -1,6 +1,8 @@
 - name: "Solano, Nueva Vizcaya"
   domain: "[bettersolano.org](https://bettersolano.org)"
   repo: "[GitHub](https://github.com/BetterSolano/bettersolano)"
+  repo_owner: "BetterSolano"
+  repo_name: "bettersolano"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -12,6 +14,8 @@
 - name: "Bacolod City, Negros Occidental"
   domain: "[betterbacolod.org](https://betterbacolod.org)"
   repo: "[GitHub](https://github.com/betterbacolod/betterbacolod)"
+  repo_owner: "betterbacolod"
+  repo_name: "betterbacolod"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -23,6 +27,9 @@
 - name: "Calauan, Laguna"
   domain: "[bettercalauan.org](https://bettercalauan.org)"
   repo: "[GitHub](https://github.com/bettercalauan/bettercalauan/tree/react-typescript)"
+  repo_owner: "bettercalauan"
+  repo_name: "bettercalauan"
+  repo_ref: "react-typescript"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -45,6 +52,8 @@
 - name: "Los Baños, Laguna"
   domain: "[betterlb.org](https://betterlb.org)"
   repo: "[GitHub](https://github.com/BetterLosBanos/betterlb)"
+  repo_owner: "BetterLosBanos"
+  repo_name: "betterlb"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -56,6 +65,8 @@
 - name: "Las Piñas City, Metro Manila"
   domain: "[betterlaspinas.org](https://betterlaspinas.org)"
   repo: "[GitHub](https://github.com/jmacj/betterlaspinas)"
+  repo_owner: "jmacj"
+  repo_name: "betterlaspinas"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -75,6 +86,8 @@
 - name: "Tagaytay City, Cavite"
   domain: "[bettertagaytay.org](https://www.bettertagaytay.org/)"
   repo: "[GitHub](https://github.com/Arlovzki/bettertagaytay)"
+  repo_owner: "Arlovzki"
+  repo_name: "bettertagaytay"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -86,6 +99,8 @@
 - name: "Indang, Cavite"
   domain: "[betterindang.org](https://betterindang.org)"
   repo: "[GitHub](https://github.com/michaustriaqa/betterindang)"
+  repo_owner: "michaustriaqa"
+  repo_name: "betterindang"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -97,6 +112,8 @@
 - name: "General Santos City, South Cotabato"
   domain: "[bettergensan.org](https://bettergensan.org)"
   repo: "[GitHub](https://github.com/psalmcatulpos/bettergensan)"
+  repo_owner: "psalmcatulpos"
+  repo_name: "bettergensan"
   socials: []
   status: "🟢 Active"
   stale: false
@@ -105,6 +122,8 @@
 - name: "Koronadal City, South Cotabato"
   domain: "[betterkoronadal.org](https://betterkoronadal.org)"
   repo: "[GitHub](https://github.com/janineooak/betterkoronadal)"
+  repo_owner: "janineooak"
+  repo_name: "betterkoronadal"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -113,6 +132,8 @@
 - name: "Dasmariñas City, Cavite"
   domain: "[betterdasmarinas.org](https://betterdasmarinas.org)"
   repo: "[GitHub](https://github.com/Shuashuaa/BetterDasmarinas)"
+  repo_owner: "Shuashuaa"
+  repo_name: "BetterDasmarinas"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -124,6 +145,8 @@
 - name: "General Trias, Cavite"
   domain: "[bettergeneraltrias.org](https://www.bettergeneraltrias.org/)"
   repo: "[GitHub](https://github.com/kenhehe/betterGeneraltrias)"
+  repo_owner: "kenhehe"
+  repo_name: "betterGeneraltrias"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -135,6 +158,8 @@
 - name: "Tanza, Cavite"
   domain: "-"
   repo: "[GitHub](https://github.com/manalilib/betterTanza)"
+  repo_owner: "manalilib"
+  repo_name: "betterTanza"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -146,6 +171,8 @@
 - name: "San Pedro, Laguna"
   domain: "-"
   repo: "[GitHub](https://github.com/sechipeanut/BetterSanPedro)"
+  repo_owner: "sechipeanut"
+  repo_name: "BetterSanPedro"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -154,6 +181,8 @@
 - name: "Cabuyao City, Laguna"
   domain: "[bettercabuyao.org](https://bettercabuyao.org/)"
   repo: "[GitHub](https://github.com/johnrommeloctaviano/better-cabuyao)"
+  repo_owner: "johnrommeloctaviano"
+  repo_name: "better-cabuyao"
   socials: []
   status: "🟢 Active"
   stale: false
@@ -162,6 +191,8 @@
 - name: "Tuguegarao, Cagayan Valley"
   domain: "-"
   repo: "[GitHub](https://github.com/JDgayagoy/BetterTuguegarao)"
+  repo_owner: "JDgayagoy"
+  repo_name: "BetterTuguegarao"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -170,6 +201,8 @@
 - name: "Davao City, Davao Del Sur"
   domain: "-"
   repo: "[GitHub](https://github.com/johnloydlao/betterdavao)"
+  repo_owner: "johnloydlao"
+  repo_name: "betterdavao"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -178,6 +211,8 @@
 - name: "Allen, Northern Samar"
   domain: "[betterallen.org](https://betterallen.org)"
   repo: "[GitHub](https://github.com/xandreiAThome/betterallen)"
+  repo_owner: "xandreiAThome"
+  repo_name: "betterallen"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -189,6 +224,8 @@
 - name: "Aparri, Cagayan Valley"
   domain: "[betteraparri.org](https://betteraparri.org/)"
   repo: "[GitHub](https://github.com/egiebk/betteraparri)"
+  repo_owner: "egiebk"
+  repo_name: "betteraparri"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -200,6 +237,8 @@
 - name: "San Pablo, Laguna"
   domain: "[bettersanpablo.org](https://www.bettersanpablo.org/)"
   repo: "[GitHub](https://github.com/ChristiannWick/bettersanpablo)"
+  repo_owner: "ChristiannWick"
+  repo_name: "bettersanpablo"
   socials: []
   status: "🟢 Active"
   stale: false
@@ -208,6 +247,8 @@
 - name: "Binangonan, Rizal"
   domain: "-"
   repo: "[GitHub](https://github.com/betterbinangonan-devs/betterbinangonan)"
+  repo_owner: "betterbinangonan-devs"
+  repo_name: "betterbinangonan"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -219,6 +260,8 @@
 - name: "Taytay, Rizal"
   domain: "-"
   repo: "[GitHub](https://github.com/zzelif/bettertaytay)"
+  repo_owner: "zzelif"
+  repo_name: "bettertaytay"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -227,6 +270,8 @@
 - name: "Olongapo City, Zambales"
   domain: "[betterolongapo.org](https://betterolongapo.org/)"
   repo: "[GitHub](https://github.com/eyronjohn/betterolongapo)"
+  repo_owner: "eyronjohn"
+  repo_name: "betterolongapo"
   socials: []
   status: "🟢 Active"
   stale: false
@@ -235,6 +280,8 @@
 - name: "Biñan, Laguna"
   domain: "-"
   repo: "[GitHub](https://github.com/Criflar/betterbinan)"
+  repo_owner: "Criflar"
+  repo_name: "betterbinan"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -243,6 +290,8 @@
 - name: "Tanay, Rizal"
   domain: "[bettertanay.org](https://bettertanay.org)"
   repo: "[GitHub](https://github.com/s4burieru/bettertanay)"
+  repo_owner: "s4burieru"
+  repo_name: "bettertanay"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -254,6 +303,8 @@
 - name: "Puerto Princesa City, Palawan"
   domain: "-"
   repo: "[GitHub](https://github.com/hmcldryl/betterpuertoprincesa)"
+  repo_owner: "hmcldryl"
+  repo_name: "betterpuertoprincesa"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -262,6 +313,8 @@
 - name: "Iligan City, Lanao del Norte"
   domain: "[betteriligancity.org](https://betteriligancity.org/)"
   repo: "[GitHub](https://github.com/KishonShrill/BetterIligan)"
+  repo_owner: "KishonShrill"
+  repo_name: "BetterIligan"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -273,6 +326,8 @@
 - name: "Hilongos, Leyte"
   domain: "-"
   repo: "[GitHub](https://github.com/rolpppp/betterhilongos)"
+  repo_owner: "rolpppp"
+  repo_name: "betterhilongos"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -281,6 +336,8 @@
 - name: "Limay, Bataan"
   domain: "[betterlimay.org](https://betterlimay.org/)"
   repo: "[GitHub](https://github.com/AstroMC98/betterlimay)"
+  repo_owner: "AstroMC98"
+  repo_name: "betterlimay"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -292,6 +349,8 @@
 - name: "Balanga, Bataan"
   domain: "[betterbalanga.org](https://betterbalanga.org/)"
   repo: "[GitHub](https://github.com/AstroMC98/betterbalanga)"
+  repo_owner: "AstroMC98"
+  repo_name: "betterbalanga"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -303,6 +362,8 @@
 - name: "Bulakan, Bulacan"
   domain: "[betterbulakan.vercel.app](https://betterbulakan.vercel.app)"
   repo: "[GitHub](https://github.com/kuyacarlo/betterbulakan)"
+  repo_owner: "kuyacarlo"
+  repo_name: "betterbulakan"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -311,6 +372,8 @@
 - name: "San Jose, Antique"
   domain: "-"
   repo: "[GitHub](https://github.com/bonfire404/bettersanjose)"
+  repo_owner: "bonfire404"
+  repo_name: "bettersanjose"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -319,6 +382,8 @@
 - name: "Libmanan, Camarines Sur"
   domain: "[betterlibmanan.org](https://betterlibmanan.org)"
   repo: "[GitHub](https://github.com/enzox0/betterlibmanan)"
+  repo_owner: "enzox0"
+  repo_name: "betterlibmanan"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -330,6 +395,8 @@
 - name: "San Pascual, Masbate"
   domain: "-"
   repo: "[GitHub](https://github.com/marcuwynu23/bettersanpascualmasbate)"
+  repo_owner: "marcuwynu23"
+  repo_name: "bettersanpascualmasbate"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -338,6 +405,8 @@
 - name: "Teresa, Rizal"
   domain: "-"
   repo: "[GitHub](https://github.com/MewSeiren/betterteresa.org)"
+  repo_owner: "MewSeiren"
+  repo_name: "betterteresa.org"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -346,6 +415,8 @@
 - name: "Atimonan, Quezon"
   domain: "-"
   repo: "[GitHub](https://github.com/EmsiPrds/betteratimonan)"
+  repo_owner: "EmsiPrds"
+  repo_name: "betteratimonan"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -362,6 +433,8 @@
 - name: "Calamba, Laguna"
   domain: "-"
   repo: "[GitHub](https://github.com/apajuan/bettercalamba)"
+  repo_owner: "apajuan"
+  repo_name: "bettercalamba"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -370,6 +443,8 @@
 - name: "Cabanatuan City, Nueva Ecija"
   domain: "[bettercabanatuan.org](https://bettercabanatuan.org)"
   repo: "[GitHub](https://github.com/BetterCabanatuan/bettercabanatuan)"
+  repo_owner: "BetterCabanatuan"
+  repo_name: "bettercabanatuan"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -381,6 +456,8 @@
 - name: "Angeles City, Pampanga"
   domain: "-"
   repo: "[GitHub](https://github.com/ongods/betterangeles)"
+  repo_owner: "ongods"
+  repo_name: "betterangeles"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -389,6 +466,8 @@
 - name: "Cebu City, Cebu"
   domain: "-"
   repo: "[GitHub](https://github.com/kyrenmearr/bettercebucity)"
+  repo_owner: "kyrenmearr"
+  repo_name: "bettercebucity"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -397,6 +476,8 @@
 - name: "Piat, Cagayan Valley"
   domain: "-"
   repo: "[GitHub](https://github.com/JoScripty/betterpiat)"
+  repo_owner: "JoScripty"
+  repo_name: "betterpiat"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -405,6 +486,8 @@
 - name: "Alaminos City, Pangasinan"
   domain: "[betteralaminoscity.org](https://betteralaminoscity.org)"
   repo: "[GitHub](https://github.com/ljsalcedo-dev/betteralaminoscity)"
+  repo_owner: "ljsalcedo-dev"
+  repo_name: "betteralaminoscity"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -429,6 +512,8 @@
 - name: "Santa Barbara, Pangasinan"
   domain: "-"
   repo: "[GitHub](https://github.com/JericoGarcia21/better-santabarbara)"
+  repo_owner: "JericoGarcia21"
+  repo_name: "better-santabarbara"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -437,6 +522,8 @@
 - name: "Taguig City, Metro Manila"
   domain: "-"
   repo: "[GitHub](https://github.com/plvzfq-rit/bettertaguig)"
+  repo_owner: "plvzfq-rit"
+  repo_name: "bettertaguig"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -445,6 +532,8 @@
 - name: "Sara, Iloilo"
   domain: "-"
   repo: "[GitHub](https://github.com/SaraGugmaKo/bettersara)"
+  repo_owner: "SaraGugmaKo"
+  repo_name: "bettersara"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -453,6 +542,8 @@
 - name: "Bayawan, Negros Oriental"
   domain: "-"
   repo: "[GitHub](https://github.com/rodneydelacruz/betterbayawan)"
+  repo_owner: "rodneydelacruz"
+  repo_name: "betterbayawan"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -461,6 +552,8 @@
 - name: "Bacoor City, Cavite"
   domain: "-"
   repo: "[GitHub](https://github.com/riamjs/betterbacoor)"
+  repo_owner: "riamjs"
+  repo_name: "betterbacoor"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -493,6 +586,8 @@
 - name: "Agoo, La Union"
   domain: "[betteragoo.org](https://betteragoo.org/)"
   repo: "[GitHub](https://github.com/glennmarkgarcia/betteragoo)"
+  repo_owner: "glennmarkgarcia"
+  repo_name: "betteragoo"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -501,6 +596,8 @@
 - name: "Aurora, Zamboanga del Sur"
   domain: "[betteraurora.org](https://betteraurora.org)"
   repo: "[GitHub](https://github.com/Jayke770/betteraurora)"
+  repo_owner: "Jayke770"
+  repo_name: "betteraurora"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -509,6 +606,8 @@
 - name: "Infanta, Quezon"
   domain: "-"
   repo: "[GitHub](https://github.com/davisolpruvnik/betterinfanta)"
+  repo_owner: "davisolpruvnik"
+  repo_name: "betterinfanta"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -517,6 +616,8 @@
 - name: "Bocaue, Bulacan"
   domain: "-"
   repo: "[GitHub](https://github.com/ericksondelacruz/betterbocaue)"
+  repo_owner: "ericksondelacruz"
+  repo_name: "betterbocaue"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -533,6 +634,8 @@
 - name: "Meycauayan, Bulacan"
   domain: "-"
   repo: "[GitHub](https://github.com/shnflrsc/bettermeycauayan)"
+  repo_owner: "shnflrsc"
+  repo_name: "bettermeycauayan"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -541,6 +644,8 @@
 - name: "Calapan, Oriental Mindoro"
   domain: "[bettercalapan.org](https://bettercalapan.org)"
   repo: "[GitHub](https://github.com/bettercalapan/portal)"
+  repo_owner: "bettercalapan"
+  repo_name: "portal"
   socials: []
   status: "🟢 Active"
   stale: false
@@ -557,6 +662,8 @@
 - name: "Tandag City, Surigao del Sur"
   domain: "-"
   repo: "[GitHub](https://github.com/BetterTandag/better-tandag)"
+  repo_owner: "BetterTandag"
+  repo_name: "better-tandag"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -565,6 +672,8 @@
 - name: "Baler, Aurora"
   domain: "-"
   repo: "[GitHub](https://github.com/tekwicks/betterbaler)"
+  repo_owner: "tekwicks"
+  repo_name: "betterbaler"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -573,6 +682,8 @@
 - name: "City of Manila, Metro Manila"
   domain: "[bettermanila.org](https://bettermanila.org)"
   repo: "[GitHub](https://github.com/grgdlm/bettermanila)"
+  repo_owner: "grgdlm"
+  repo_name: "bettermanila"
   socials: []
   status: "🟡 Work in Progress"
   stale: false
@@ -589,6 +700,8 @@
 - name: "Aborlan, Palawan"
   domain: "[betteraborlan.org](https://betteraborlan.org)"
   repo: "[GitHub](https://github.com/BetterAborlan/betteraborlan)"
+  repo_owner: "BetterAborlan"
+  repo_name: "betteraborlan"
   socials:
     - platform: "facebook"
       label: "Facebook"
@@ -600,6 +713,8 @@
 - name: "Quezon City, Metro Manila"
   domain: "-"
   repo: "[GitHub](https://github.com/brixavengoza/betterquezoncity)"
+  repo_owner: "brixavengoza"
+  repo_name: "betterquezoncity"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -608,6 +723,8 @@
 - name: "Kabugao, Apayao"
   domain: "-"
   repo: "[GitHub](https://github.com/KuyaLoy/betterkabugao)"
+  repo_owner: "KuyaLoy"
+  repo_name: "betterkabugao"
   socials: []
   status: "🔵 Planned"
   stale: false
@@ -632,6 +749,8 @@
 - name: "Pasig City, Metro Manila"
   domain: "-"
   repo: "[GitHub](https://github.com/ericvelasco-dev/betterpasig)"
+  repo_owner: "ericvelasco-dev"
+  repo_name: "betterpasig"
   socials: []
   status: "🔵 Planned"
   stale: false
