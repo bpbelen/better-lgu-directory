@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed social icons not rendering inside Markdown table cells, and restored their hover colors.
 - Fixed the sync workflow to push merge commits even when there are no data changes.
 - Fixed a broken Better Solano Starter link and a repository link in the registration instructions.
+- Fixed Las Piñas City's Repository link to point at `betterlaspinas/betterlaspinas` instead of the maintainer's personal fork, so the repository-activity feature reads from the org repo.
 
 ## [1.0.0] - 2026-04-06
 
