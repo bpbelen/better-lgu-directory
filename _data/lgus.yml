@@ -637,3 +637,14 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@ericvelasco-dev](https://github.com/ericvelasco-dev)"
+- name: "Cavite City, Cavite"
+  domain: "[bettercavitecity.org](https://bettercavitecity.org)"
+  repo: "-"
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://www.facebook.com/bettercavitecity.org"
+  status: "🟢 Active"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@jdsatsatin](https://github.com/jdsatsatin)"
