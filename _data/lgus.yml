@@ -731,10 +731,12 @@
   open_for_adoption: false
   maintainer: "[@KuyaLoy](https://github.com/KuyaLoy)"
 - name: "Tago, Surigao del Sur"
-  domain: "-"
-  repo: "-"
+  domain: "[bettertago.org](https://www.bettertago.org)"
+  repo: "[Github](https://github.com/BetterTago/better-tago)"
+  repo_owner: "BetterTago"
+  repo_name: "better-tago"
   socials: []
-  status: "🔵 Planned"
+  status: "🟡 Work in Progress"
   stale: false
   open_for_adoption: false
   maintainer: "[@ikmespinoza](https://github.com/ikmespinoza)"
