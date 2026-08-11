@@ -632,12 +632,12 @@
   open_for_adoption: false
   maintainer: "[@izxclyde](https://github.com/izxclyde)"
 - name: "Meycauayan, Bulacan"
-  domain: "-"
+  domain: "[bettermeycauayan.org](https://bettermeycauayan.org)"
   repo: "[GitHub](https://github.com/shnflrsc/bettermeycauayan)"
   repo_owner: "shnflrsc"
   repo_name: "bettermeycauayan"
   socials: []
-  status: "🟡 Work in Progress"
+  status: "🟢 Active"
   stale: false
   open_for_adoption: false
   maintainer: "[@shnflrsc](https://github.com/shnflrsc)"
