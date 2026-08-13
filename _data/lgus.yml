@@ -779,3 +779,11 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@laet4x](https://github.com/fr4nc1stein/)"
+- name: "Dumaguete City, Negros Oriental"
+  domain: "-"
+  repo: "-"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@daveteves](https://github.com/daveteves)"
