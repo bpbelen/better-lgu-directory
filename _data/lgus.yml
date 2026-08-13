@@ -769,3 +769,13 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@jdsatsatin](https://github.com/jdsatsatin)"
+- name: "Aklan Province"
+  domain: "[betteraklan.org](https://betteraklan.org/)"
+  repo: "[GitHub](https://github.com/fr4nc1stein/betteraklan)"
+  repo_owner: "fr4nc1stein"
+  repo_name: "betteraklan"
+  socials: []
+  status: "🟢 Active"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@laet4x](https://github.com/fr4nc1stein/)"
