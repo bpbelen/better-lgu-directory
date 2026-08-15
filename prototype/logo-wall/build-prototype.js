@@ -10,7 +10,13 @@ const path = require('path');
 
 const dir = __dirname;
 const logos = require('./logos.json').filter((r) => r.ok);
+
+// The count is a claim about the directory, so it comes from the count of
+// Active entries — NOT from how many Logos happened to fetch. Sourcing it from
+// the crawl would make the headline number drop whenever a portal shipped a
+// broken favicon, which reads as "LGUs left the movement".
 const total = require('./logos.json').length;
+const activeCount = total;
 
 const itemsFrom = (list) =>
     list
@@ -47,7 +53,7 @@ const variants = {
         html: `<section class="lw lw-a" data-variant="A">
   <div class="lw-inner lw-a-inner">
     <div class="lw-a-copy">
-      <div class="lw-count">${logos.length}</div>
+      <div class="lw-count">${activeCount}</div>
       <h2 class="lw-a-heading">LGU portals live<br>and counting</h2>
     </div>
     <div class="lw-a-rail">
@@ -69,7 +75,7 @@ const variants = {
   <div class="lw-inner">
     <div class="lw-c-head">
       <h2 class="lw-c-heading">The movement so far</h2>
-      <p class="lw-c-sub">${logos.length} Better LGU portals — drag or scroll to browse.</p>
+      <p class="lw-c-sub">${activeCount} Better LGU portals — drag or scroll to browse.</p>
     </div>
   </div>
   <div class="lw-c-rail-wrap">${rail}</div>
