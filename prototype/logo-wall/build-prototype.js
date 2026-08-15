@@ -54,7 +54,7 @@ const variants = {
   <div class="lw-inner lw-a-inner">
     <div class="lw-a-copy">
       <div class="lw-count">${activeCount}</div>
-      <h2 class="lw-a-heading">LGU portals live<br>and counting</h2>
+      <h2 class="lw-a-heading">Better LGU portals live<br>and counting</h2>
     </div>
     <div class="lw-a-rail">
       <div class="lw-marquee">${track()}</div>
