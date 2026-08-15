@@ -184,6 +184,11 @@ const bar = `
 
 let html = fs.readFileSync(path.join(dir, 'live-index.html'), 'utf8');
 
+// The live page links its assets relatively (assets/css/style.css), which
+// resolve against localhost when served from here and 404 — the page renders
+// unstyled. Point them back at the real origin.
+html = html.replace(/(href|src)="(assets\/)/g, '$1="https://lgu.bettergov.ph/$2');
+
 const wall = Object.values(variants).map((v) => v.html).join('\n');
 
 // Inject between the hero <section> and the <main> that holds the directory table.
