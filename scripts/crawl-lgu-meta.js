@@ -34,6 +34,145 @@ function isBoilerplate(title, description) {
     );
 }
 
+// --- Ineligibility reasons -------------------------------------------------
+//
+// Every rule that can keep an Entry out of the Featured pool reports why, as
+// a { summaries, message } pair:
+//
+//   summaries — one or more variable-free phrases naming the rule(s) that
+//               failed. These are the grouping keys for the end-of-run tally,
+//               so they must never embed a URL, byte count, status code or
+//               content type. A portal missing two meta fields reports two
+//               summaries, so each field's total stays readable as one number
+//               rather than splitting across every combination it appeared in.
+//   message   — the single per-portal log line, which does carry those
+//               specifics.
+//
+// Before this, all of these paths returned a bare null and main() printed one
+// static "incomplete, boilerplate, or robots-disallowed" line for every one of
+// them — which named three causes out of seven and made a missing meta tag
+// indistinguishable from a 404 on the og:image.
+function reason(summaries, message) {
+    const list = Array.isArray(summaries) ? summaries : [summaries];
+    return { summaries: list, message: message || list.join('; ') };
+}
+
+// extractMeta() resolves each field through its fallback chain first, so a
+// blank here means *every* source for that field was absent — name them all,
+// otherwise the log sends the reader looking for an og: tag they may have
+// deliberately skipped in favour of the plain HTML one.
+const META_FIELD_SOURCES = [
+    ['image', 'og:image'],
+    ['title', 'og:title/<title>'],
+    ['description', 'og:description/meta[name=description]'],
+];
+
+function missingMetaReason({ title, description, image }) {
+    const values = { title, description, image };
+    const missing = META_FIELD_SOURCES.filter(([field]) => !values[field]).map(([, label]) => label);
+    if (missing.length === 0) return null;
+    // One summary per absent field: a portal missing both the image and the
+    // description counts towards each field's own tally row, so "how many
+    // portals have no og:image at all" is a single number in the summary.
+    return reason(
+        missing.map((label) => `missing ${label}`),
+        `missing ${missing.join(' + ')}`,
+    );
+}
+
+function boilerplateReason(title, description) {
+    // isBoilerplate() stays the single gate (see its comment above) so a future
+    // template revision only has to be made there; the per-field checks below
+    // exist purely to tell the operator which field tripped it.
+    if (!isBoilerplate(title, description)) return null;
+
+    const matched = [];
+    if (normalizeWhitespace(title) === normalizeWhitespace(BOILERPLATE_TITLE)) matched.push('title');
+    if (normalizeWhitespace(description) === normalizeWhitespace(BOILERPLATE_DESCRIPTION)) {
+        matched.push('description');
+    }
+    const generic = "BetterGov.ph's generic template copy";
+    return reason(
+        'boilerplate BetterGov.ph template copy',
+        // A rule added to isBoilerplate() but not mirrored here still reports —
+        // just without naming the field.
+        matched.length === 0
+            ? `title/description is still ${generic}`
+            : `${matched.join(' and ')} ${matched.length > 1 ? 'are' : 'is'} still ${generic}`,
+    );
+}
+
+function formatBytes(bytes) {
+    return `${(bytes / 1024).toFixed(1)}KB`;
+}
+
+// The og:image is fetched separately from the page, so it has four distinct
+// ways to fail. The page itself answering fine means none of them make the
+// portal "unreachable" — they are all metadata-quality rejections.
+function imageRejectionReason({ imageUrl, fetchError, statusCode, contentType, byteLength, truncatedOversize }) {
+    // Tested for presence, not truthiness: an Error carrying an empty message
+    // still means the fetch failed, and falling through would misreport it as
+    // a content-type problem — exactly the misattribution this reporting
+    // exists to remove.
+    if (fetchError !== undefined && fetchError !== null) {
+        const detail = String(fetchError) || 'no error detail available';
+        return reason('og:image could not be fetched', `og:image could not be fetched (${imageUrl}): ${detail}`);
+    }
+    if (!Number.isFinite(statusCode)) {
+        return reason('og:image response was unusable', `og:image returned no usable HTTP status (${imageUrl})`);
+    }
+    if (statusCode >= 400 || statusCode < 200) {
+        return reason('og:image returned an HTTP error', `og:image returned HTTP ${statusCode} (${imageUrl})`);
+    }
+    const normalizedType = (contentType || '').toLowerCase();
+    if (!normalizedType.startsWith('image/')) {
+        return reason(
+            'og:image is not an image',
+            `og:image served as ${normalizedType ? `"${normalizedType}"` : 'no Content-Type'} (${imageUrl})`,
+        );
+    }
+    if (truncatedOversize || byteLength > IMAGE_SIZE_CEILING_BYTES) {
+        // A truncated fetch stopped reading at the ceiling, so the real size is
+        // unknown — say so rather than reporting the ceiling as the size.
+        const ceiling = formatBytes(IMAGE_SIZE_CEILING_BYTES);
+        return reason(
+            'og:image exceeds the size ceiling',
+            truncatedOversize
+                ? `og:image exceeds the ${ceiling} ceiling (truncated mid-download) (${imageUrl})`
+                : `og:image is ${formatBytes(byteLength)}, over the ${ceiling} ceiling (${imageUrl})`,
+        );
+    }
+    return null;
+}
+
+// Groups the run's rejections by summary so a systemic problem (say, twelve
+// portals with no og:image at all) reads as one line instead of needing the
+// whole per-portal log scrolled and counted by hand. Takes one entry per
+// rejected portal — each being that portal's list of summaries — so the
+// headline count stays a portal count even though a portal can fail two rules
+// at once, in which case it contributes to both tally rows.
+function formatIneligibleSummary(rejections) {
+    if (rejections.length === 0) return '';
+
+    const counts = new Map();
+    for (const summaries of rejections) {
+        for (const summary of new Set(summaries)) {
+            counts.set(summary, (counts.get(summary) || 0) + 1);
+        }
+    }
+
+    const rows = [...counts.entries()].sort(
+        (a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0),
+    );
+    const labelWidth = Math.max(...rows.map(([label]) => label.length));
+    const countWidth = Math.max(...rows.map(([, count]) => String(count).length));
+
+    return [
+        `Ineligible (${rejections.length}):`,
+        ...rows.map(([label, count]) => `  ${label.padEnd(labelWidth)}  ${String(count).padStart(countWidth)}`),
+    ].join('\n');
+}
+
 // Escape a value for safe embedding inside a double-quoted YAML scalar.
 function yamlStr(value) {
     return String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
@@ -249,15 +388,20 @@ function extractDomainLink(rawCell) {
     return { label: bare, url: /^https?:\/\//i.test(bare) ? bare : `https://${bare}` };
 }
 
-// Crawls one Entry's portal and returns a complete lgu-meta row, or null if
-// the portal is reachable but does not meet the completeness/quality bar
-// (#122, #125, #127). Throws PortalUnreachableError if the portal itself
-// looks down — callers use that to decide whether to preserve the previous
-// row instead of dropping it.
+// Crawls one Entry's portal and returns { row, reason }: a complete lgu-meta
+// row when the portal clears the bar, or `row: null` plus the specific
+// { summary, message } rejection when it is reachable but does not meet the
+// completeness/quality bar (#122, #125, #127). Throws PortalUnreachableError
+// if the portal itself looks down — callers use that to decide whether to
+// preserve the previous row instead of dropping it.
 async function crawlEntry(entry, displayDomain, origin) {
+    const rejected = (why) => ({ row: null, reason: why });
+
     const robots = await checkRobots(origin);
     if (robots.disallowed) {
-        return null;
+        return rejected(
+            reason('robots.txt disallows our crawler', `robots.txt at ${origin} disallows ${USER_AGENT}`),
+        );
     }
     if (robots.crawlDelaySeconds > 0) {
         await sleep(robots.crawlDelaySeconds * 1000);
@@ -276,14 +420,16 @@ async function crawlEntry(entry, displayDomain, origin) {
     const html = pageRes.body.toString('utf8');
     const { title, description, image } = extractMeta(html);
 
-    if (!title || !description || !image) {
-        // Mechanically incomplete — no fallback (#125), no row.
-        return null;
+    // Mechanically incomplete — no fallback (#125), no row.
+    const incomplete = missingMetaReason({ title, description, image });
+    if (incomplete) {
+        return rejected(incomplete);
     }
 
-    if (isBoilerplate(title, description)) {
-        // Complete but not "about" the LGU (#122's quality floor) — no row.
-        return null;
+    // Complete but not "about" the LGU (#122's quality floor) — no row.
+    const boilerplate = boilerplateReason(title, description);
+    if (boilerplate) {
+        return rejected(boilerplate);
     }
 
     if (robots.crawlDelaySeconds > 0) {
@@ -297,27 +443,30 @@ async function crawlEntry(entry, displayDomain, origin) {
     } catch (err) {
         // The image failing to load is a metadata-quality problem, not the
         // whole portal being down — the page itself answered fine.
-        return null;
+        return rejected(imageRejectionReason({ imageUrl, fetchError: err.message }));
     }
 
-    if (imageRes.statusCode >= 400 || imageRes.statusCode < 200) {
-        return null;
-    }
-    const imageContentType = (imageRes.headers['content-type'] || '').toLowerCase();
-    if (!imageContentType.startsWith('image/')) {
-        return null;
-    }
-    if (imageRes.truncatedOversize || imageRes.body.length > IMAGE_SIZE_CEILING_BYTES) {
-        return null;
+    const imageRejection = imageRejectionReason({
+        imageUrl,
+        statusCode: imageRes.statusCode,
+        contentType: imageRes.headers['content-type'] || '',
+        byteLength: imageRes.body.length,
+        truncatedOversize: imageRes.truncatedOversize,
+    });
+    if (imageRejection) {
+        return rejected(imageRejection);
     }
 
     return {
-        name: entry.name,
-        domain: displayDomain,
-        image: imageUrl,
-        title,
-        description,
-        order_key: sha1First8(displayDomain),
+        row: {
+            name: entry.name,
+            domain: displayDomain,
+            image: imageUrl,
+            title,
+            description,
+            order_key: sha1First8(displayDomain),
+        },
+        reason: null,
     };
 }
 
@@ -383,22 +532,34 @@ async function main() {
 
     const previous = parseExistingLguMeta(LGU_META_PATH);
     const rows = [];
+    // One entry per portal kept out of the pool — each entry being that
+    // portal's summaries — tallied at the end of the run.
+    const rejections = [];
 
     for (const entry of candidates) {
         const { label: displayDomain, url: origin } = extractDomainLink(entry.domain);
         try {
-            const row = await crawlEntry(entry, displayDomain, origin);
+            const { row, reason: rejection } = await crawlEntry(entry, displayDomain, origin);
             if (row) {
                 rows.push(row);
                 console.log(`  ✅ ${displayDomain} — featured row generated`);
             } else {
-                console.log(`  ⛔ ${displayDomain} — ineligible (incomplete, boilerplate, or robots-disallowed)`);
+                // A rejection with no reason would be a bug in this script, not
+                // a fact about the portal — say so rather than dereferencing
+                // null and having the catch below blame the network for it.
+                const described = rejection || reason('rejected without a stated reason (bug)');
+                rejections.push(described.summaries);
+                console.log(`  ⛔ ${displayDomain} — ineligible: ${described.message}`);
             }
         } catch (err) {
-            if (err instanceof PortalUnreachableError && previous.has(displayDomain)) {
+            if (!(err instanceof PortalUnreachableError)) {
+                rejections.push(['crawl error (not a portal problem)']);
+                console.log(`  ⛔ ${displayDomain} — crawl error: ${err.stack || err.message}`);
+            } else if (previous.has(displayDomain)) {
                 rows.push(previous.get(displayDomain));
                 console.log(`  ⚠️  ${displayDomain} — unreachable this run (${err.message}); kept previous row`);
             } else {
+                rejections.push(['unreachable, with no previous row to keep']);
                 console.log(`  ⛔ ${displayDomain} — unreachable and no previous row (${err.message})`);
             }
         }
@@ -410,6 +571,11 @@ async function main() {
     }
     fs.writeFileSync(LGU_META_PATH, formatLguMetaYaml(rows));
     console.log(`🎉 Featured pool: ${rows.length} eligible portal(s). Written to ${LGU_META_PATH}`);
+
+    const summaryBlock = formatIneligibleSummary(rejections);
+    if (summaryBlock) {
+        console.log(`\n${summaryBlock}`);
+    }
 }
 
 if (require.main === module) {
@@ -421,11 +587,17 @@ if (require.main === module) {
 
 module.exports = {
     USER_AGENT,
+    PortalUnreachableError,
+    crawlEntry,
     IMAGE_SIZE_CEILING_BYTES,
     BOILERPLATE_DESCRIPTION,
     BOILERPLATE_TITLE,
     normalizeWhitespace,
     isBoilerplate,
+    missingMetaReason,
+    boilerplateReason,
+    imageRejectionReason,
+    formatIneligibleSummary,
     sha1First8,
     extractMeta,
     parseTagAttrs,
