@@ -12,24 +12,32 @@ const dir = __dirname;
 const logos = require('./logos.json').filter((r) => r.ok);
 const total = require('./logos.json').length;
 
-const items = logos
-    .map(
-        (l) => `<li class="lw-item">
+const itemsFrom = (list) =>
+    list
+        .map(
+            (l) => `<li class="lw-item">
     <a class="lw-link" href="https://${l.domain}" title="${l.name}">
       <img class="lw-img" src="./logos/${l.file}" alt="${l.name}" loading="lazy">
     </a>
   </li>`,
-    )
-    .join('\n  ');
+        )
+        .join('\n  ');
+
+const items = itemsFrom(logos);
+// B's second row is offset so the two rows aren't the same sequence twice.
+const itemsOffset = itemsFrom(logos.slice(Math.floor(logos.length / 2)).concat(logos.slice(0, Math.floor(logos.length / 2))));
 
 // The marquee track is duplicated so the loop is seamless.
-const track = (extraClass = '') =>
+const track = (extraClass = '', src = items) =>
     `<ul class="lw-track ${extraClass}" aria-label="Better LGU portals">
-  ${items}
-  ${items.replace(/<li class="lw-item">/g, '<li class="lw-item" aria-hidden="true" tabindex="-1">')}
+  ${src}
+  ${src.replace(/<li class="lw-item">/g, '<li class="lw-item" aria-hidden="true" tabindex="-1">')}
 </ul>`;
 
-const grid = `<ul class="lw-grid" aria-label="Better LGU portals">
+// Bounded: always exactly one row tall, however many Logos there are. The
+// overflow scrolls instead of wrapping, so the directory table below never
+// gets pushed further down as the directory grows.
+const rail = `<ul class="lw-rail" aria-label="Better LGU portals">
   ${items}
 </ul>`;
 
@@ -52,17 +60,19 @@ const variants = {
         name: 'Full-bleed ornament, two rows',
         html: `<section class="lw lw-b" data-variant="B">
   <div class="lw-marquee">${track('lw-fwd')}</div>
-  <div class="lw-marquee lw-b-second">${track('lw-rev')}</div>
+  <div class="lw-marquee lw-b-second">${track('lw-rev', itemsOffset)}</div>
 </section>`,
     },
     C: {
-        name: 'Static centred grid',
+        name: 'Scrollable rail, no auto-motion',
         html: `<section class="lw lw-c" data-variant="C">
   <div class="lw-inner">
-    <h2 class="lw-c-heading">The movement so far</h2>
-    <p class="lw-c-sub">${logos.length} Better LGU portals across the Philippines.</p>
-    ${grid}
+    <div class="lw-c-head">
+      <h2 class="lw-c-heading">The movement so far</h2>
+      <p class="lw-c-sub">${logos.length} Better LGU portals — drag or scroll to browse.</p>
+    </div>
   </div>
+  <div class="lw-c-rail-wrap">${rail}</div>
 </section>`,
     },
 };
@@ -77,10 +87,13 @@ const css = `
 
 /* plate + grayscale treatment, shared by every variant */
 .lw-item { list-style: none; flex: 0 0 auto; }
-.lw-link { display: grid; place-items: center; width: 132px; height: 84px; padding: .85rem;
+.lw-link { display: block; box-sizing: border-box; width: 148px; height: 96px; padding: .6rem;
   background: var(--lw-plate); border: 1px solid var(--lw-border); border-radius: 12px;
   transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease; }
-.lw-img { max-width: 100%; max-height: 100%; object-fit: contain;
+/* Explicit width+height+contain rather than max-*: the page's Tailwind preflight
+   sets img height:auto, which lets a large intrinsic logo overflow the
+   plate and get clipped by the border radius. */
+.lw-img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center;
   transition: filter .2s ease, opacity .2s ease; }
 @media (hover: hover) and (pointer: fine) {
   .lw-img { filter: grayscale(1); opacity: .72; }
@@ -99,8 +112,11 @@ const css = `
 @keyframes lw-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .lw-marquee:hover .lw-track, .lw-marquee:focus-within .lw-track { animation-play-state: paused; }
 
-/* grid, used by C and as the reduced-motion fallback for A and B */
-.lw-grid { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 0; padding: 0; }
+/* bounded rail — one row always, scrolls rather than wraps */
+.lw-rail { display: flex; gap: 1rem; margin: 0; padding: .5rem 1rem; list-style: none;
+  overflow-x: auto; scroll-snap-type: x proximity; overscroll-behavior-x: contain;
+  scrollbar-width: thin; }
+.lw-rail .lw-item { scroll-snap-align: start; }
 
 /* ---- A: count-led band ---- */
 .lw-a { background: #fff; border-block: 1px solid var(--lw-border); padding: 2.5rem 0; }
@@ -113,16 +129,25 @@ const css = `
 /* ---- B: full-bleed ornament ---- */
 .lw-b { background: #f8f9fa; padding: 2rem 0; border-block: 1px solid var(--lw-border); }
 .lw-b-second { margin-top: 1rem; }
-.lw-b .lw-link { width: 108px; height: 68px; }
+/* No plate in B — the logos sit straight on the background. Trade: a
+   white-on-transparent mark has nothing to sit against and disappears. */
+.lw-b .lw-link { width: 120px; height: 78px; background: none; border: 0; padding: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .lw-b .lw-link:hover { box-shadow: none; border-color: transparent; transform: scale(1.06); }
+}
 
-/* ---- C: static centred grid ---- */
-.lw-c { background: #fff; border-block: 1px solid var(--lw-border); padding: 3rem 0; text-align: center; }
+/* ---- C: scrollable rail, no auto-motion ---- */
+.lw-c { background: #fff; border-block: 1px solid var(--lw-border); padding: 2.5rem 0; }
+.lw-c-head { text-align: center; margin-bottom: 1.25rem; }
 .lw-c-heading { font-size: 1.75rem; font-weight: 700; color: var(--lw-ink); margin: 0; letter-spacing: -.02em; }
-.lw-c-sub { color: var(--lw-muted); margin: .5rem 0 2rem; }
+.lw-c-sub { color: var(--lw-muted); margin: .5rem 0 0; }
+.lw-c-rail-wrap { max-width: 1280px; margin: 0 auto; }
 
+/* Reduced motion: stop the animation, but stay one row tall — wrapping into a
+   grid would push the directory table down further with every new entry. */
 @media (prefers-reduced-motion: reduce) {
-  .lw-track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; }
-  .lw-marquee { -webkit-mask-image: none; mask-image: none; }
+  .lw-track { animation: none; overflow-x: auto; scrollbar-width: thin; }
+  .lw-marquee { overflow: visible; -webkit-mask-image: none; mask-image: none; }
   .lw-track .lw-item[aria-hidden="true"] { display: none; }
 }
 
