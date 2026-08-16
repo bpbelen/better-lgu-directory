@@ -836,6 +836,12 @@ function findDuplicateLogos(hashByDomain) {
 // duplicate of it. Resolves the realistic case (a small handful of duplicate
 // pairs) without a full optimal rearrangement — if every row in the set
 // shares one hash, adjacency can't be avoided and the run is left as-is.
+//
+// The marquee track duplicates this array end-to-end for a seamless loop
+// (logo-band.html renders `row + row` so translateX(-50%) has no visible
+// seam) — that means index 0 and the LAST index are visually adjacent too,
+// at the wrap point. So this treats the array as circular: a linear pass
+// first, then one more check across the wrap.
 function separateAdjacentDuplicates(rows, hashByDomain) {
     const arr = rows.slice();
     const hashOf = (row) => hashByDomain.get(row.domain);
@@ -846,6 +852,32 @@ function separateAdjacentDuplicates(rows, hashByDomain) {
         while (j < arr.length && hashOf(arr[j]) === h) j++;
         if (j < arr.length) {
             [arr[i + 1], arr[j]] = [arr[j], arr[i + 1]];
+        }
+    }
+    if (arr.length > 1) {
+        const wrapHash = hashOf(arr[0]);
+        if (wrapHash !== undefined && wrapHash === hashOf(arr[arr.length - 1])) {
+            // Pull the last slot's twin inward to the nearest earlier row
+            // that isn't itself a wrapHash duplicate — same greedy,
+            // best-effort approach as the linear pass above. Only commit the
+            // swap if it doesn't reintroduce a linear adjacency at the
+            // landing spot: with too few unique rows to go around (e.g. 2
+            // duplicates and only 1 unique row total), "fixing" the wrap can
+            // just relocate the same collision next to a different
+            // neighbour — in that case leave the wrap as the one unavoidable
+            // seam rather than trade one collision for another.
+            let k = arr.length - 2;
+            while (k > 0 && hashOf(arr[k]) === wrapHash) k--;
+            if (k > 0) {
+                const candidate = arr.slice();
+                [candidate[arr.length - 1], candidate[k]] = [candidate[k], candidate[arr.length - 1]];
+                const safe =
+                    hashOf(candidate[k - 1]) !== hashOf(candidate[k]) &&
+                    hashOf(candidate[k]) !== hashOf(candidate[k + 1]);
+                if (safe) {
+                    return candidate;
+                }
+            }
         }
     }
     return arr;
