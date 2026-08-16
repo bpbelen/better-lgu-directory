@@ -463,7 +463,15 @@ main tr:last-child td {
   margin-bottom: 2rem;
 }
 
-.lb-caption {
+/* `.lb` sits inside `.prose` (index.md's content column), whose bare-element
+   rules (`.prose p`, `.prose ul`, `.prose li` — see above) carry higher
+   specificity (0,1,1) than a single class like `.lb-caption`/`.lb-track`/
+   `.lb-item` (0,1,0) and would otherwise win margin/padding/list-style on
+   these elements regardless of source order, breaking the flush alignment
+   the prototype had (it rendered outside any `.prose` ancestor). Selectors
+   below that override a `.prose <element>` rule are scoped under `.lb ` to
+   clear that bar. */
+.lb .lb-caption {
   margin: 0 0 1rem;
   text-align: center;
   font-size: 0.8125rem;
@@ -473,7 +481,9 @@ main tr:last-child td {
   color: var(--color-gray-600);
 }
 
-.lb-item {
+.lb .lb-item {
+  margin: 0;
+  padding: 0;
   list-style: none;
   flex: 0 0 auto;
 }
@@ -530,12 +540,13 @@ main tr:last-child td {
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
-.lb-track {
+.lb .lb-track {
   display: flex;
   gap: 1.25rem;
   align-items: center;
   margin: 0;
   padding: 0.5rem 0;
+  list-style: none;
   width: max-content;
   animation: lb-scroll 60s linear infinite;
 }
