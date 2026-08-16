@@ -42,7 +42,7 @@ placeholder band (same "no fallback" rule the Featured card follows).
   {%- assign row1 = pool | sort: "order_key" -%}
   {%- assign row2 = pool | sort: "shuffle_key" -%}
   <section class="lb">
-    <p class="lb-caption">{{ active_count }} Better LGU portals and counting</p>
+    <p class="lb-caption">{{ active_count }} Active Better LGU portals and counting</p>
     {%- if pool.size < 8 -%}
       <ul class="lb-rail" aria-label="Better LGU portals">
         {%- for l in row1 -%}
