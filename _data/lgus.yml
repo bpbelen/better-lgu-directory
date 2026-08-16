@@ -790,3 +790,11 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@daveteves](https://github.com/daveteves)"
+- name: "Paombong, Bulacan"
+  domain: "-"
+  repo: "-"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@denvdev](https://github.com/denvdev)"
