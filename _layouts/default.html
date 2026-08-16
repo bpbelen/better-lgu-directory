@@ -6,7 +6,17 @@
     <title>{% if page.title and page.title != 'Home' %}{{ page.title }} | {% endif %}{{ site.title }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="{{ site.baseurl }}assets/css/style.css">
+    {%- comment -%}
+    Cache-busting query param: the live domain is proxied through Cloudflare,
+    which caches this file at its edge for cache-control's max-age (4h)
+    regardless of whether the content underneath changed — a CSS fix can be
+    built and deployed by GitHub Pages and still be invisible on the public
+    domain for hours (see #179's logo-band direction bug for exactly this).
+    A static URL is what makes that possible: Cloudflare has no way to know
+    the content changed without either a cache purge or a new URL. Appending
+    the build time makes every deploy a new URL, so there's nothing to purge.
+    {%- endcomment -%}
+    <link rel="stylesheet" href="{{ site.baseurl }}assets/css/style.css?v={{ site.time | date: '%s' }}">
     <link rel="icon" type="image/svg+xml" href="{{ site.baseurl }}assets/images/logos/BetterGov_Emblem-Outline-Inversed.svg">
     <link rel="apple-touch-icon" sizes="180x180" href="{{ site.baseurl }}assets/images/logos/apple-touch-icon.png">
     {% seo %}
