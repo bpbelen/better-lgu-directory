@@ -6,11 +6,22 @@ const crypto = require('crypto');
 const { README_PATH, parseTable, validateLgu } = require('./sync-to-data.js');
 
 const LGU_META_PATH = process.argv[2] || path.join(__dirname, '../_data/lgu-meta.yml');
+const LOGO_META_PATH = process.argv[3] || path.join(__dirname, '../_data/lgu-logos.yml');
+const LOGO_DIR = process.argv[4] || path.join(__dirname, '../assets/images/lgu-logos');
 
 const USER_AGENT = 'BetterLGUDirectoryBot/1.0 (+https://lgu.bettergov.ph)';
 const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_REDIRECTS = 5;
 const IMAGE_SIZE_CEILING_BYTES = 400 * 1024; // #127: 400KB ceiling, checked on fetched bytes
+
+// #179 Logo wall: raster candidates need a 64px shortest side (SVG is exempt
+// — vector, no intrinsic ceiling). 1.2MB byte ceiling per FINDINGS.md
+// (prototype/logo-wall branch): at 200KB only 16/26 Active portals resolved a
+// Logo (38% cull, mostly the ceiling itself — portals commonly ship
+// unoptimized favicons); at 1.2MB, 23/26 resolve (12% cull, all three
+// remaining failures for real reasons — under-floor or missing icons).
+const LOGO_MIN_PX = 64;
+const LOGO_MAX_BYTES = 1.2 * 1024 * 1024;
 
 // #122: the crawl excludes any Entry whose resolved title/description is
 // byte-identical (whitespace-normalised) to BetterGov.ph's generic template
@@ -36,8 +47,8 @@ function isBoilerplate(title, description) {
 
 // --- Ineligibility reasons -------------------------------------------------
 //
-// Every rule that can keep an Entry out of the Featured pool reports why, as
-// a { summaries, message } pair:
+// Every rule that can keep an Entry out of the Featured pool (or the Logo
+// wall) reports why, as a { summaries, message } pair:
 //
 //   summaries — one or more variable-free phrases naming the rule(s) that
 //               failed. These are the grouping keys for the end-of-run tally,
@@ -151,7 +162,7 @@ function imageRejectionReason({ imageUrl, fetchError, statusCode, contentType, b
 // rejected portal — each being that portal's list of summaries — so the
 // headline count stays a portal count even though a portal can fail two rules
 // at once, in which case it contributes to both tally rows.
-function formatIneligibleSummary(rejections) {
+function formatIneligibleSummary(rejections, label = 'Ineligible') {
     if (rejections.length === 0) return '';
 
     const counts = new Map();
@@ -168,7 +179,7 @@ function formatIneligibleSummary(rejections) {
     const countWidth = Math.max(...rows.map(([, count]) => String(count).length));
 
     return [
-        `Ineligible (${rejections.length}):`,
+        `${label} (${rejections.length}):`,
         ...rows.map(([label, count]) => `  ${label.padEnd(labelWidth)}  ${String(count).padStart(countWidth)}`),
     ].join('\n');
 }
@@ -326,7 +337,7 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Attribute parsing shared by title/meta extraction — deliberately regex
+// Attribute parsing shared by title/meta/link extraction — deliberately regex
 // based rather than a DOM parser, matching this repo's zero-dependency rule.
 function parseTagAttrs(tagSource) {
     const attrs = {};
@@ -388,20 +399,23 @@ function extractDomainLink(rawCell) {
     return { label: bare, url: /^https?:\/\//i.test(bare) ? bare : `https://${bare}` };
 }
 
-// Crawls one Entry's portal and returns { row, reason }: a complete lgu-meta
-// row when the portal clears the bar, or `row: null` plus the specific
-// { summary, message } rejection when it is reachable but does not meet the
-// completeness/quality bar (#122, #125, #127). Throws PortalUnreachableError
-// if the portal itself looks down — callers use that to decide whether to
-// preserve the previous row instead of dropping it.
-async function crawlEntry(entry, displayDomain, origin) {
-    const rejected = (why) => ({ row: null, reason: why });
-
+// --- Shared fetch (#179) ----------------------------------------------------
+//
+// Every Active portal is fetched exactly once per run; the result feeds both
+// the Featured predicate (judgeFeatured) and the Logo predicate (judgeLogo)
+// below. Returns `{ ok: true, html, finalUrl, robots }` on success, or
+// `{ ok: false, reason }` for a reachable-but-blocked portal (robots
+// disallow — a rejection both predicates treat leniently in their own way,
+// not a page-fetch failure). Throws PortalUnreachableError when the page
+// itself looks down — the one condition that means "no fetch happened at
+// all" for both predicates.
+async function fetchPortalPage(origin) {
     const robots = await checkRobots(origin);
     if (robots.disallowed) {
-        return rejected(
-            reason('robots.txt disallows our crawler', `robots.txt at ${origin} disallows ${USER_AGENT}`),
-        );
+        return {
+            ok: false,
+            reason: reason('robots.txt disallows our crawler', `robots.txt at ${origin} disallows ${USER_AGENT}`),
+        };
     }
     if (robots.crawlDelaySeconds > 0) {
         await sleep(robots.crawlDelaySeconds * 1000);
@@ -409,15 +423,27 @@ async function crawlEntry(entry, displayDomain, origin) {
 
     const pageRes = await fetchFollowingRedirects(origin);
     if (pageRes.statusCode >= 400 || pageRes.statusCode < 200) {
-        throw new PortalUnreachableError(`${displayDomain} returned HTTP ${pageRes.statusCode}`);
+        throw new PortalUnreachableError(`returned HTTP ${pageRes.statusCode}`);
     }
 
     const contentType = (pageRes.headers['content-type'] || '').toLowerCase();
     if (contentType && !contentType.includes('html')) {
-        throw new PortalUnreachableError(`${displayDomain} did not return HTML (${contentType})`);
+        throw new PortalUnreachableError(`did not return HTML (${contentType})`);
     }
 
-    const html = pageRes.body.toString('utf8');
+    return { ok: true, html: pageRes.body.toString('utf8'), finalUrl: pageRes.finalUrl, robots };
+}
+
+// --- Featured Portal predicate (#122/#125/#127) -----------------------------
+//
+// Judges an already-fetched portal against the Featured Portal eligibility
+// rules. Split out of the old crawlEntry() so the single fetch above can also
+// feed judgeLogo() — crawlEntry() itself (below) is kept as a thin wrapper
+// with its original signature/behaviour for the existing tests.
+async function judgeFeatured(entry, displayDomain, fetched) {
+    const rejected = (why) => ({ row: null, reason: why });
+    const { html, finalUrl, robots } = fetched;
+
     const { title, description, image } = extractMeta(html);
 
     // Mechanically incomplete — no fallback (#125), no row.
@@ -436,7 +462,7 @@ async function crawlEntry(entry, displayDomain, origin) {
         await sleep(robots.crawlDelaySeconds * 1000);
     }
 
-    const imageUrl = new URL(image, pageRes.finalUrl).toString();
+    const imageUrl = new URL(image, finalUrl).toString();
     let imageRes;
     try {
         imageRes = await fetchFollowingRedirects(imageUrl, { maxBytes: IMAGE_SIZE_CEILING_BYTES });
@@ -468,6 +494,22 @@ async function crawlEntry(entry, displayDomain, origin) {
         },
         reason: null,
     };
+}
+
+// Crawls one Entry's portal and returns { row, reason }: a complete lgu-meta
+// row when the portal clears the bar, or `row: null` plus the specific
+// { summary, message } rejection when it is reachable but does not meet the
+// completeness/quality bar (#122, #125, #127). Throws PortalUnreachableError
+// if the portal itself looks down — callers use that to decide whether to
+// preserve the previous row instead of dropping it. Kept as a thin wrapper
+// over fetchPortalPage()+judgeFeatured() so its external contract (used by
+// scripts/test-crawl-reporting.js) is unchanged by the #179 fetch/judge split.
+async function crawlEntry(entry, displayDomain, origin) {
+    const fetched = await fetchPortalPage(origin);
+    if (!fetched.ok) {
+        return { row: null, reason: fetched.reason };
+    }
+    return judgeFeatured(entry, displayDomain, fetched);
 }
 
 function parseExistingLguMeta(filePath) {
@@ -519,62 +561,342 @@ function formatLguMetaYaml(rows) {
         .join('\n');
 }
 
+// --- Logo predicate (#179) --------------------------------------------------
+
+function linkTags(html) {
+    return [...html.matchAll(/<link\b[^>]*>/gi)].map((m) => {
+        const attrs = parseTagAttrs(m[0]);
+        return {
+            rel: (attrs.rel || '').toLowerCase(),
+            href: attrs.href || '',
+            sizes: attrs.sizes || '',
+            type: attrs.type || '',
+        };
+    });
+}
+
+function declaredPx(sizes) {
+    const m = /(\d+)\s*x\s*(\d+)/i.exec(sizes || '');
+    return m ? Number(m[1]) : 0;
+}
+
+// Logo resolution chain, in order (#179, FINDINGS.md on prototype/logo-wall):
+// SVG rel=icon -> any other rel=icon -> largest manifest icon ->
+// apple-touch-icon -> /favicon.ico. SVG/rel=icon ranks above
+// apple-touch-icon deliberately: apple-touch-icon is conventionally an
+// opaque square with internal padding (fine on iOS, but reads as a boxy tile
+// on the plateless Logo wall). Built from the SAME fetched HTML the Featured
+// predicate uses — no second page fetch — though resolving a manifest or a
+// candidate icon does require its own request, same as the Featured
+// predicate's separate og:image fetch.
+async function logoCandidates(pageUrl, html) {
+    const out = [];
+    const links = linkTags(html);
+    const abs = (href) => new URL(href, pageUrl).toString();
+
+    for (const l of links.filter((l) => /(^|\s)icon(\s|$)/.test(l.rel) && l.href)) {
+        const svg = l.type === 'image/svg+xml' || /\.svg(\?|$|#)/i.test(l.href);
+        out.push({ source: svg ? 'rel-icon-svg' : 'rel-icon', url: abs(l.href), declaredPx: declaredPx(l.sizes) });
+    }
+
+    const manifestLink = links.find((l) => l.rel.includes('manifest') && l.href);
+    if (manifestLink) {
+        try {
+            const res = await fetchFollowingRedirects(abs(manifestLink.href));
+            const icons = JSON.parse(res.body.toString('utf8')).icons || [];
+            const largest = icons
+                .filter((i) => i && i.src)
+                .sort((a, b) => declaredPx(b.sizes) - declaredPx(a.sizes))[0];
+            if (largest) {
+                out.push({
+                    source: 'manifest',
+                    url: new URL(largest.src, res.finalUrl).toString(),
+                    declaredPx: declaredPx(largest.sizes),
+                });
+            }
+        } catch {
+            // A broken/unreachable manifest is one fewer candidate, not a crawl
+            // failure — the chain just falls through to apple-touch-icon/favicon.
+        }
+    }
+
+    for (const l of links.filter((l) => l.rel.includes('apple-touch-icon') && l.href)) {
+        out.push({ source: 'apple-touch-icon', url: abs(l.href), declaredPx: declaredPx(l.sizes) || 180 });
+    }
+
+    out.push({ source: 'favicon.ico', url: abs('/favicon.ico'), declaredPx: 0 });
+
+    const rank = (c) => {
+        if (c.source === 'rel-icon-svg') return 0;
+        if (c.source === 'rel-icon') return 1;
+        if (c.source === 'manifest') return 2;
+        if (c.source === 'apple-touch-icon') return 3;
+        return 4; // favicon.ico
+    };
+    return out.sort((a, b) => rank(a) - rank(b) || b.declaredPx - a.declaredPx);
+}
+
+// Zero-dependency intrinsic-size + format sniff, PNG/ICO/SVG/JPEG/WEBP.
+// Prototype-grade: JPEG/WEBP report px:0 (their headers aren't parsed), which
+// means they always fail the 64px floor rather than risk mis-measuring one —
+// in practice every winning candidate observed in FINDINGS.md was PNG, ICO,
+// or SVG.
+function intrinsicPx(buf, contentType) {
+    if (buf.length >= 8 && buf.slice(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])))
+        return { px: buf.readUInt32BE(16), ext: 'png' };
+    if (buf.length >= 6 && buf.slice(0, 4).equals(Buffer.from([0x00, 0x00, 0x01, 0x00]))) {
+        let max = 0;
+        const n = buf.readUInt16LE(4);
+        for (let i = 0; i < n; i++) max = Math.max(max, buf[6 + i * 16] || 256);
+        return { px: max, ext: 'ico' };
+    }
+    const head = buf.slice(0, 400).toString('utf8');
+    if (/<svg/i.test(head) || (contentType || '').includes('svg')) return { px: Infinity, ext: 'svg' };
+    if (buf.length >= 3 && buf.slice(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff]))) return { px: 0, ext: 'jpg' };
+    if (
+        buf.length >= 12 &&
+        buf.slice(0, 4).toString('ascii') === 'RIFF' &&
+        buf.slice(8, 12).toString('ascii') === 'WEBP'
+    )
+        return { px: 0, ext: 'webp' };
+    return { px: 0, ext: 'bin' };
+}
+
+// SVG sanitization on ingest (#179): reject anything that could execute
+// script or reach off-domain — a <script> tag, <foreignObject> (can embed
+// arbitrary HTML/script inside SVG), or an external href/xlink:href (data:
+// and same-document #fragment references are fine; http(s):// is not).
+function svgIsUnsafe(buf) {
+    const s = buf.toString('utf8');
+    return /<script[\s>]|<foreignObject[\s>]|(?:xlink:href|href)\s*=\s*["']?\s*https?:/i.test(s);
+}
+
+async function tryLogoCandidate(c) {
+    let res;
+    try {
+        res = await fetchFollowingRedirects(c.url, { maxBytes: LOGO_MAX_BYTES });
+    } catch (err) {
+        return { ok: false, why: `could not be fetched: ${err.message}` };
+    }
+    if (res.statusCode !== 200) return { ok: false, why: `HTTP ${res.statusCode}` };
+    const ct = (res.headers['content-type'] || '').toLowerCase();
+    if (ct.includes('html')) return { ok: false, why: 'served HTML (SPA catch-all)' };
+    if (res.body.length === 0) return { ok: false, why: 'empty body' };
+    if (res.truncatedOversize || res.body.length > LOGO_MAX_BYTES) {
+        return { ok: false, why: `over the ${formatBytes(LOGO_MAX_BYTES)} ceiling` };
+    }
+    const { px, ext } = intrinsicPx(res.body, ct);
+    if (ext === 'bin') return { ok: false, why: `unrecognized format (${ct || 'no content-type'})` };
+    if (ext === 'svg' && svgIsUnsafe(res.body)) {
+        return { ok: false, why: 'SVG failed sanitize (script/foreignObject/external href)' };
+    }
+    if (ext !== 'svg' && px < LOGO_MIN_PX) return { ok: false, why: `${px}px, under the ${LOGO_MIN_PX}px floor` };
+    return { ok: true, buf: res.body, ext, px, source: c.source, url: c.url };
+}
+
+// Judges an already-fetched portal against the Logo predicate — independent
+// of judgeFeatured() above (a portal can resolve a Logo without being
+// Featured, or vice versa), but built from the same single fetch.
+async function judgeLogo(entry, displayDomain, fetched) {
+    const tried = [];
+    for (const c of await logoCandidates(fetched.finalUrl, fetched.html)) {
+        let r;
+        try {
+            r = await tryLogoCandidate(c);
+        } catch (err) {
+            r = { ok: false, why: err.message };
+        }
+        tried.push(`${c.source} ${c.url} → ${r.ok ? 'OK' : r.why}`);
+        if (r.ok) {
+            return {
+                row: {
+                    name: entry.name,
+                    domain: displayDomain,
+                    file: `${displayDomain}.${r.ext}`,
+                    ext: r.ext,
+                    source: r.source,
+                    px: r.px === Infinity ? 'vector' : r.px,
+                    bytes: r.buf.length,
+                },
+                buf: r.buf,
+                reason: null,
+            };
+        }
+    }
+    return {
+        row: null,
+        buf: null,
+        reason: reason(
+            'no Logo candidate resolved',
+            `no Logo candidate passed for ${displayDomain} (tried ${tried.length}): ${tried.join(' | ')}`,
+        ),
+    };
+}
+
+function parseExistingLguLogos(filePath) {
+    // Same shape/rationale as parseExistingLguMeta() above, for
+    // _data/lgu-logos.yml. A portal that fails to resolve a Logo this run
+    // keeps its last-known-good row *and* file (the file is never rewritten
+    // when kept, so it just needs to already exist on disk from a prior run).
+    if (!fs.existsSync(filePath)) return new Map();
+
+    const content = fs.readFileSync(filePath, 'utf8');
+    const byDomain = new Map();
+    const entryBlocks = content.split(/\n(?=- name:)/);
+
+    for (const block of entryBlocks) {
+        if (!block.trim().startsWith('- name:')) continue;
+        const get = (key) => {
+            const m = block.match(new RegExp(`${key}:\\s*"((?:[^"\\\\]|\\\\.)*)"`));
+            return m ? m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\') : '';
+        };
+        const domain = get('domain');
+        if (!domain) continue;
+        const bytesMatch = block.match(/bytes:\s*(\d+)/);
+        byDomain.set(domain, {
+            name: get('name'),
+            domain,
+            file: get('file'),
+            ext: get('ext'),
+            source: get('source'),
+            px: get('px'),
+            bytes: bytesMatch ? Number(bytesMatch[1]) : 0,
+        });
+    }
+    return byDomain;
+}
+
+function formatLguLogosYaml(rows) {
+    if (rows.length === 0) return '';
+    return rows
+        .map((row) =>
+            [
+                `- name: "${yamlStr(row.name)}"`,
+                `  domain: "${yamlStr(row.domain)}"`,
+                `  file: "${yamlStr(row.file)}"`,
+                `  ext: "${yamlStr(row.ext)}"`,
+                `  source: "${yamlStr(row.source)}"`,
+                `  px: "${yamlStr(row.px)}"`,
+                `  bytes: ${row.bytes}`,
+            ].join('\n'),
+        )
+        .join('\n');
+}
+
 async function main() {
-    console.log('🚀 Starting Featured Portal metadata crawl...');
+    console.log('🚀 Starting Featured Portal + Logo wall metadata crawl...');
     const readmeContent = fs.readFileSync(README_PATH, 'utf8');
     const rawLgus = parseTable(readmeContent, '<!-- SYNC_LGU_TABLE_START -->', '<!-- SYNC_LGU_TABLE_END -->');
     const lgus = rawLgus.map(validateLgu);
 
     // #122: eligibility gate #1 — status must be Active. Domain is required
     // by construction: no domain means nothing to crawl, so such an Entry can
-    // never satisfy the completeness gate.
+    // never satisfy either predicate.
     const candidates = lgus.filter((lgu) => lgu.status === '🟢 Active' && lgu.domain && lgu.domain !== '-');
 
-    const previous = parseExistingLguMeta(LGU_META_PATH);
-    const rows = [];
-    // One entry per portal kept out of the pool — each entry being that
-    // portal's summaries — tallied at the end of the run.
-    const rejections = [];
+    const previousFeatured = parseExistingLguMeta(LGU_META_PATH);
+    const previousLogos = parseExistingLguLogos(LOGO_META_PATH);
 
-    for (const entry of candidates) {
-        const { label: displayDomain, url: origin } = extractDomainLink(entry.domain);
-        try {
-            const { row, reason: rejection } = await crawlEntry(entry, displayDomain, origin);
-            if (row) {
-                rows.push(row);
-                console.log(`  ✅ ${displayDomain} — featured row generated`);
-            } else {
-                // A rejection with no reason would be a bug in this script, not
-                // a fact about the portal — say so rather than dereferencing
-                // null and having the catch below blame the network for it.
-                const described = rejection || reason('rejected without a stated reason (bug)');
-                rejections.push(described.summaries);
-                console.log(`  ⛔ ${displayDomain} — ineligible: ${described.message}`);
-            }
-        } catch (err) {
-            if (!(err instanceof PortalUnreachableError)) {
-                rejections.push(['crawl error (not a portal problem)']);
-                console.log(`  ⛔ ${displayDomain} — crawl error: ${err.stack || err.message}`);
-            } else if (previous.has(displayDomain)) {
-                rows.push(previous.get(displayDomain));
-                console.log(`  ⚠️  ${displayDomain} — unreachable this run (${err.message}); kept previous row`);
-            } else {
-                rejections.push(['unreachable, with no previous row to keep']);
-                console.log(`  ⛔ ${displayDomain} — unreachable and no previous row (${err.message})`);
-            }
+    const featuredRows = [];
+    const featuredRejections = [];
+    const logoRows = [];
+    const logoRejections = [];
+
+    if (!fs.existsSync(LOGO_DIR)) {
+        fs.mkdirSync(LOGO_DIR, { recursive: true });
+    }
+
+    // Logo resolution failures are more lenient than Featured's: ANY failure
+    // to resolve a Logo this run (unreachable, robots-disallowed, or no
+    // candidate in the chain passed) keeps the last-known-good row+file if
+    // one exists — the file itself is already on disk from a prior run, so
+    // nothing needs rewriting. Only a portal with no previous Logo at all
+    // counts as ineligible.
+    function keepOrDropLogo(displayDomain, message, summaries) {
+        if (previousLogos.has(displayDomain)) {
+            logoRows.push(previousLogos.get(displayDomain));
+            console.log(`  ⚠️  ${displayDomain} — Logo: ${message}; kept last-known-good file`);
+        } else {
+            logoRejections.push(summaries || ['no Logo candidate resolved']);
+            console.log(`  ⛔ ${displayDomain} — Logo: ${message}`);
         }
     }
 
-    const dataDir = path.dirname(LGU_META_PATH);
-    if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-    }
-    fs.writeFileSync(LGU_META_PATH, formatLguMetaYaml(rows));
-    console.log(`🎉 Featured pool: ${rows.length} eligible portal(s). Written to ${LGU_META_PATH}`);
+    for (const entry of candidates) {
+        const { label: displayDomain, url: origin } = extractDomainLink(entry.domain);
+        let fetched;
+        try {
+            fetched = await fetchPortalPage(origin);
+        } catch (err) {
+            if (!(err instanceof PortalUnreachableError)) {
+                featuredRejections.push(['crawl error (not a portal problem)']);
+                logoRejections.push(['crawl error (not a portal problem)']);
+                console.log(`  ⛔ ${displayDomain} — crawl error: ${err.stack || err.message}`);
+                continue;
+            }
+            if (previousFeatured.has(displayDomain)) {
+                featuredRows.push(previousFeatured.get(displayDomain));
+                console.log(`  ⚠️  ${displayDomain} — Featured: unreachable this run (${err.message}); kept previous row`);
+            } else {
+                featuredRejections.push(['unreachable, with no previous row to keep']);
+                console.log(`  ⛔ ${displayDomain} — Featured: unreachable and no previous row (${err.message})`);
+            }
+            keepOrDropLogo(displayDomain, `unreachable this run (${err.message})`);
+            continue;
+        }
 
-    const summaryBlock = formatIneligibleSummary(rejections);
-    if (summaryBlock) {
-        console.log(`\n${summaryBlock}`);
+        if (!fetched.ok) {
+            // robots.txt disallow — a normal Featured drop (#125's
+            // self-healing rule), but a lenient Logo keep-or-drop.
+            featuredRejections.push(fetched.reason.summaries);
+            console.log(`  ⛔ ${displayDomain} — Featured: ineligible: ${fetched.reason.message}`);
+            keepOrDropLogo(displayDomain, fetched.reason.message);
+            continue;
+        }
+
+        const featuredResult = await judgeFeatured(entry, displayDomain, fetched);
+        if (featuredResult.row) {
+            featuredRows.push(featuredResult.row);
+            console.log(`  ✅ ${displayDomain} — Featured row generated`);
+        } else {
+            const described = featuredResult.reason || reason('rejected without a stated reason (bug)');
+            featuredRejections.push(described.summaries);
+            console.log(`  ⛔ ${displayDomain} — Featured: ineligible: ${described.message}`);
+        }
+
+        const logoResult = await judgeLogo(entry, displayDomain, fetched);
+        if (logoResult.row) {
+            fs.writeFileSync(path.join(LOGO_DIR, logoResult.row.file), logoResult.buf);
+            logoRows.push(logoResult.row);
+            const size = logoResult.row.px === 'vector' ? 'vector' : `${logoResult.row.px}px`;
+            console.log(
+                `  ✅ ${displayDomain} — Logo resolved (${logoResult.row.source}, ${size}, ${Math.round(logoResult.row.bytes / 1024)}KB)`,
+            );
+        } else {
+            keepOrDropLogo(displayDomain, logoResult.reason.message, logoResult.reason.summaries);
+        }
+    }
+
+    const metaDataDir = path.dirname(LGU_META_PATH);
+    if (!fs.existsSync(metaDataDir)) {
+        fs.mkdirSync(metaDataDir, { recursive: true });
+    }
+    fs.writeFileSync(LGU_META_PATH, formatLguMetaYaml(featuredRows));
+    console.log(`🎉 Featured pool: ${featuredRows.length} eligible portal(s). Written to ${LGU_META_PATH}`);
+    const featuredSummary = formatIneligibleSummary(featuredRejections);
+    if (featuredSummary) {
+        console.log(`\n${featuredSummary}`);
+    }
+
+    const logoDataDir = path.dirname(LOGO_META_PATH);
+    if (!fs.existsSync(logoDataDir)) {
+        fs.mkdirSync(logoDataDir, { recursive: true });
+    }
+    fs.writeFileSync(LOGO_META_PATH, formatLguLogosYaml(logoRows));
+    console.log(`🎉 Logo wall: ${logoRows.length} resolved Logo(s). Written to ${LOGO_META_PATH}`);
+    const logoSummary = formatIneligibleSummary(logoRejections, 'Logo ineligible');
+    if (logoSummary) {
+        console.log(`\n${logoSummary}`);
     }
 }
 
@@ -588,6 +910,8 @@ if (require.main === module) {
 module.exports = {
     USER_AGENT,
     PortalUnreachableError,
+    fetchPortalPage,
+    judgeFeatured,
     crawlEntry,
     IMAGE_SIZE_CEILING_BYTES,
     BOILERPLATE_DESCRIPTION,
@@ -604,4 +928,16 @@ module.exports = {
     extractDomainLink,
     parseExistingLguMeta,
     formatLguMetaYaml,
+    // Logo predicate (#179)
+    LOGO_MIN_PX,
+    LOGO_MAX_BYTES,
+    linkTags,
+    declaredPx,
+    logoCandidates,
+    intrinsicPx,
+    svgIsUnsafe,
+    tryLogoCandidate,
+    judgeLogo,
+    parseExistingLguLogos,
+    formatLguLogosYaml,
 };
