@@ -6,7 +6,7 @@ title: Home
 
 A community-maintained directory of **Better LGU** digital transparency portals across the Philippines — find an existing portal before you build, contribute to one, or start your own. Each entry links to the LGU's portal, source repository, and social pages, along with its current maintenance status.
 
-{%- include logo-wall.html -%}
+{%- include logo-band.html -%}
 
 ## 📋 Directory
 

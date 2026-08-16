@@ -1,5 +1,5 @@
 {%- comment -%}
-Logo wall (#179). A full-bleed, two-row, counter-scrolling band of resolved
+Logo band (#179). A full-bleed, two-row, counter-scrolling band of resolved
 Better LGU portal Logos, placed between the Featured hero and the directory
 table. Pure build-time Liquid, no JavaScript.
 
@@ -41,62 +41,62 @@ placeholder band (same "no fallback" rule the Featured card follows).
   {%- assign active_count = site.data.lgus | where: "status", "🟢 Active" | size -%}
   {%- assign row1 = pool | sort: "order_key" -%}
   {%- assign row2 = pool | sort: "shuffle_key" -%}
-  <section class="lw">
-    <p class="lw-caption">{{ active_count }} Better LGU portals and counting</p>
+  <section class="lb">
+    <p class="lb-caption">{{ active_count }} Better LGU portals and counting</p>
     {%- if pool.size < 8 -%}
-      <ul class="lw-rail" aria-label="Better LGU portals">
+      <ul class="lb-rail" aria-label="Better LGU portals">
         {%- for l in row1 -%}
-          <li class="lw-item">
-            <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
-              <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+          <li class="lb-item">
+            <a class="lb-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+              <img class="lb-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
             </a>
           </li>
         {%- endfor -%}
       </ul>
     {%- else -%}
-      <div class="lw-marquee-rows">
-        <div class="lw-marquee">
-          <ul class="lw-track lw-fwd" aria-label="Better LGU portals">
+      <div class="lb-marquee-rows">
+        <div class="lb-marquee">
+          <ul class="lb-track lb-fwd" aria-label="Better LGU portals">
             {%- for l in row1 -%}
-              <li class="lw-item">
-                <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
-                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+              <li class="lb-item">
+                <a class="lb-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+                  <img class="lb-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
                 </a>
               </li>
             {%- endfor -%}
             {%- for l in row1 -%}
-              <li class="lw-item" aria-hidden="true">
-                <a class="lw-link" href="https://{{ l.domain }}" tabindex="-1">
-                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="" loading="lazy">
+              <li class="lb-item" aria-hidden="true">
+                <a class="lb-link" href="https://{{ l.domain }}" tabindex="-1">
+                  <img class="lb-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="" loading="lazy">
                 </a>
               </li>
             {%- endfor -%}
           </ul>
         </div>
-        <div class="lw-marquee lw-second-row">
-          <ul class="lw-track lw-rev" aria-label="Better LGU portals">
+        <div class="lb-marquee lb-second-row">
+          <ul class="lb-track lb-rev" aria-label="Better LGU portals">
             {%- for l in row2 -%}
-              <li class="lw-item">
-                <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
-                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+              <li class="lb-item">
+                <a class="lb-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+                  <img class="lb-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
                 </a>
               </li>
             {%- endfor -%}
             {%- for l in row2 -%}
-              <li class="lw-item" aria-hidden="true">
-                <a class="lw-link" href="https://{{ l.domain }}" tabindex="-1">
-                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="" loading="lazy">
+              <li class="lb-item" aria-hidden="true">
+                <a class="lb-link" href="https://{{ l.domain }}" tabindex="-1">
+                  <img class="lb-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="" loading="lazy">
                 </a>
               </li>
             {%- endfor -%}
           </ul>
         </div>
       </div>
-      <ul class="lw-rail lw-static-rail" aria-label="Better LGU portals">
+      <ul class="lb-rail lb-static-rail" aria-label="Better LGU portals">
         {%- for l in row1 -%}
-          <li class="lw-item">
-            <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
-              <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+          <li class="lb-item">
+            <a class="lb-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+              <img class="lb-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
             </a>
           </li>
         {%- endfor -%}

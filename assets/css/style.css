@@ -441,15 +441,15 @@ main tr:last-child td {
   main td, main th { padding: 0.75rem 1rem; }
 }
 
-/* ---- Logo wall (#179) ----
+/* ---- Logo band (#179) ----
    Full-bleed: breaks out of .prose/main's max-w-7xl + px-4 container via the
    standard 100vw/-50vw technique, so the band spans the full viewport width
    regardless of where it sits in the document. No plate — Logos sit directly
    on the section background (--color-gray-100), unlike the Featured card's
    glass panel. Ported from prototype/logo-wall (variant B); see that
-   branch's FINDINGS.md and _includes/logo-wall.html for the data/markup this
+   branch's FINDINGS.md and _includes/logo-band.html for the data/markup this
    styles. */
-.lw {
+.lb {
   position: relative;
   left: 50%;
   right: 50%;
@@ -463,7 +463,7 @@ main tr:last-child td {
   margin-bottom: 2rem;
 }
 
-.lw-caption {
+.lb-caption {
   margin: 0 0 1rem;
   text-align: center;
   font-size: 0.8125rem;
@@ -473,7 +473,7 @@ main tr:last-child td {
   color: var(--color-gray-600);
 }
 
-.lw-item {
+.lb-item {
   list-style: none;
   flex: 0 0 auto;
 }
@@ -481,7 +481,7 @@ main tr:last-child td {
 /* No plate: an explicit box (not max-*) so a large intrinsic Logo can't
    overflow and get visually clipped — the page's Tailwind preflight sets
    img height:auto, which would otherwise let that happen. */
-.lw-link {
+.lb-link {
   display: block;
   box-sizing: border-box;
   width: 120px;
@@ -489,7 +489,7 @@ main tr:last-child td {
   transition: transform 0.2s ease;
 }
 
-.lw-img {
+.lb-img {
   display: block;
   width: 100%;
   height: 100%;
@@ -502,70 +502,70 @@ main tr:last-child td {
    touch devices always see full color (they have no hover state to promise
    a reveal on). */
 @media (hover: hover) and (pointer: fine) {
-  .lw-img {
+  .lb-img {
     filter: grayscale(1);
     opacity: 0.75;
   }
-  .lw-link:hover .lw-img,
-  .lw-link:focus-visible .lw-img {
+  .lb-link:hover .lb-img,
+  .lb-link:focus-visible .lb-img {
     filter: grayscale(0);
     opacity: 1;
   }
-  .lw-link:hover {
+  .lb-link:hover {
     transform: translateY(-2px);
   }
 }
 
-.lw-link:focus-visible {
+.lb-link:focus-visible {
   outline: 2px solid var(--color-primary-600);
   outline-offset: 3px;
   border-radius: 4px;
 }
 
 /* Marquee mechanics: each row's track is duplicated (row1+row1, row2+row2 —
-   see logo-wall.html) so translating exactly -50% loops seamlessly. */
-.lw-marquee {
+   see logo-band.html) so translating exactly -50% loops seamlessly. */
+.lb-marquee {
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
-.lw-track {
+.lb-track {
   display: flex;
   gap: 1.25rem;
   align-items: center;
   margin: 0;
   padding: 0.5rem 0;
   width: max-content;
-  animation: lw-scroll 60s linear infinite;
+  animation: lb-scroll 60s linear infinite;
 }
 
-.lw-rev {
+.lb-rev {
   animation-direction: reverse;
 }
 
-.lw-second-row {
+.lb-second-row {
   margin-top: 0.75rem;
 }
 
-@keyframes lw-scroll {
+@keyframes lb-scroll {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 
 /* Pause on hover AND focus-within (#179) — focus-within covers keyboard
    users tabbing into a Logo link inside a still-animating row. */
-.lw-marquee:hover .lw-track,
-.lw-marquee:focus-within .lw-track {
+.lb-marquee:hover .lb-track,
+.lb-marquee:focus-within .lb-track {
   animation-play-state: paused;
 }
 
 /* Bounded static rail — always exactly one row tall, scrolls rather than
    wraps, so the directory table below it never gets pushed down further as
    the directory grows. This is the ONLY markup rendered below ~8 resolved
-   Logos (see logo-wall.html), and doubles as the prefers-reduced-motion
-   fallback for larger pools via .lw-static-rail below. */
-.lw-rail {
+   Logos (see logo-band.html), and doubles as the prefers-reduced-motion
+   fallback for larger pools via .lb-static-rail below. */
+.lb-rail {
   display: flex;
   gap: 1.25rem;
   align-items: center;
@@ -578,22 +578,22 @@ main tr:last-child td {
   scrollbar-width: thin;
 }
 
-.lw-rail .lw-item {
+.lb-rail .lb-item {
   scroll-snap-align: start;
 }
 
 /* At/above the ~8 threshold, both the marquee and the static rail render;
    only one is ever exposed to the accessibility tree at a time, since
    display:none removes an element from it entirely. */
-.lw-static-rail {
+.lb-static-rail {
   display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .lw-marquee-rows {
+  .lb-marquee-rows {
     display: none;
   }
-  .lw-static-rail {
+  .lb-static-rail {
     display: flex;
   }
 }
