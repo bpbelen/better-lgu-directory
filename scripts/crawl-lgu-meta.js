@@ -717,6 +717,19 @@ async function judgeLogo(entry, displayDomain, fetched) {
                     source: r.source,
                     px: r.px === Infinity ? 'vector' : r.px,
                     bytes: r.buf.length,
+                    // Two independent stable orders for the home page's two-row
+                    // marquee (#179): `order_key` for row 1 (same scheme as the
+                    // Featured pool's shuffled-but-stable ordering), and a
+                    // differently-salted `shuffle_key` for row 2. Hashing a
+                    // different input per row, rather than reordering the same
+                    // sequence, is what keeps the two rows from ever drifting
+                    // back into a shared run of matches as they counter-scroll
+                    // (see FINDINGS.md on prototype/logo-wall) — sorting by an
+                    // unrelated hash is this repo's build-time (Liquid, no
+                    // arbitrary JS) substitute for the prototype's mulberry32
+                    // Fisher-Yates shuffle.
+                    order_key: sha1First8(displayDomain),
+                    shuffle_key: sha1First8(`${displayDomain}:lw2`),
                 },
                 buf: r.buf,
                 reason: null,
@@ -761,6 +774,8 @@ function parseExistingLguLogos(filePath) {
             source: get('source'),
             px: get('px'),
             bytes: bytesMatch ? Number(bytesMatch[1]) : 0,
+            order_key: get('order_key'),
+            shuffle_key: get('shuffle_key'),
         });
     }
     return byDomain;
@@ -778,6 +793,8 @@ function formatLguLogosYaml(rows) {
                 `  source: "${yamlStr(row.source)}"`,
                 `  px: "${yamlStr(row.px)}"`,
                 `  bytes: ${row.bytes}`,
+                `  order_key: "${yamlStr(row.order_key)}"`,
+                `  shuffle_key: "${yamlStr(row.shuffle_key)}"`,
             ].join('\n'),
         )
         .join('\n');
