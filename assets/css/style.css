@@ -31,6 +31,12 @@ body {
   margin: 0;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* .lb's 100vw/-50vw full-bleed breakout (#179) overshoots the real
+     viewport whenever a vertical scrollbar is present, since 100vw includes
+     the scrollbar's own width — same reason the nav already clips itself
+     with overflow-x-clip. Clipped at body so the sliver never shows as a
+     page-level horizontal scrollbar. */
+  overflow-x: clip;
 }
 
 .hero-gradient {
@@ -551,7 +557,7 @@ main tr:last-child td {
   animation: lb-scroll 60s linear infinite;
 }
 
-.lb-rev {
+.lb .lb-rev {
   animation-direction: reverse;
 }
 
