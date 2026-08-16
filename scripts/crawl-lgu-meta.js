@@ -14,7 +14,7 @@ const REQUEST_TIMEOUT_MS = 10_000;
 const MAX_REDIRECTS = 5;
 const IMAGE_SIZE_CEILING_BYTES = 400 * 1024; // #127: 400KB ceiling, checked on fetched bytes
 
-// #179 Logo wall: raster candidates need a 64px shortest side (SVG is exempt
+// #179 Logo band: raster candidates need a 64px shortest side (SVG is exempt
 // — vector, no intrinsic ceiling). 1.2MB byte ceiling per FINDINGS.md
 // (prototype/logo-wall branch): at 200KB only 16/26 Active portals resolved a
 // Logo (38% cull, mostly the ceiling itself — portals commonly ship
@@ -48,7 +48,7 @@ function isBoilerplate(title, description) {
 // --- Ineligibility reasons -------------------------------------------------
 //
 // Every rule that can keep an Entry out of the Featured pool (or the Logo
-// wall) reports why, as a { summaries, message } pair:
+// band) reports why, as a { summaries, message } pair:
 //
 //   summaries — one or more variable-free phrases naming the rule(s) that
 //               failed. These are the grouping keys for the end-of-run tally,
@@ -585,7 +585,7 @@ function declaredPx(sizes) {
 // apple-touch-icon -> /favicon.ico. SVG/rel=icon ranks above
 // apple-touch-icon deliberately: apple-touch-icon is conventionally an
 // opaque square with internal padding (fine on iOS, but reads as a boxy tile
-// on the plateless Logo wall). Built from the SAME fetched HTML the Featured
+// on the plateless Logo band). Built from the SAME fetched HTML the Featured
 // predicate uses — no second page fetch — though resolving a manifest or a
 // candidate icon does require its own request, same as the Featured
 // predicate's separate og:image fetch.
@@ -729,7 +729,7 @@ async function judgeLogo(entry, displayDomain, fetched) {
                     // arbitrary JS) substitute for the prototype's mulberry32
                     // Fisher-Yates shuffle.
                     order_key: sha1First8(displayDomain),
-                    shuffle_key: sha1First8(`${displayDomain}:lw2`),
+                    shuffle_key: sha1First8(`${displayDomain}:lb2`),
                 },
                 buf: r.buf,
                 reason: null,
@@ -801,7 +801,7 @@ function formatLguLogosYaml(rows) {
 }
 
 async function main() {
-    console.log('🚀 Starting Featured Portal + Logo wall metadata crawl...');
+    console.log('🚀 Starting Featured Portal + Logo band metadata crawl...');
     const readmeContent = fs.readFileSync(README_PATH, 'utf8');
     const rawLgus = parseTable(readmeContent, '<!-- SYNC_LGU_TABLE_START -->', '<!-- SYNC_LGU_TABLE_END -->');
     const lgus = rawLgus.map(validateLgu);
@@ -910,7 +910,7 @@ async function main() {
         fs.mkdirSync(logoDataDir, { recursive: true });
     }
     fs.writeFileSync(LOGO_META_PATH, formatLguLogosYaml(logoRows));
-    console.log(`🎉 Logo wall: ${logoRows.length} resolved Logo(s). Written to ${LOGO_META_PATH}`);
+    console.log(`🎉 Logo band: ${logoRows.length} resolved Logo(s). Written to ${LOGO_META_PATH}`);
     const logoSummary = formatIneligibleSummary(logoRejections, 'Logo ineligible');
     if (logoSummary) {
         console.log(`\n${logoSummary}`);

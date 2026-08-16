@@ -1,4 +1,4 @@
-// Zero-dependency regression test for the Logo wall predicate (#179) in
+// Zero-dependency regression test for the Logo band predicate (#179) in
 // crawl-lgu-meta.js — same shape as test-featured-eligibility.js: no
 // package.json / test runner on either branch, plain Node `assert`. Run with:
 //
