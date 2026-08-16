@@ -727,10 +727,8 @@ async function judgeLogo(entry, displayDomain, fetched) {
                     // (see FINDINGS.md on prototype/logo-wall) — sorting by an
                     // unrelated hash is this repo's build-time (Liquid, no
                     // arbitrary JS) substitute for the prototype's mulberry32
-                    // Fisher-Yates shuffle. These are only the SEED values —
-                    // main() replaces both with rank keys once the whole pool
-                    // is known, so byte-identical Logos can be kept apart
-                    // (see assignRankKeys()).
+                    // Fisher-Yates shuffle. Seed values only — main()
+                    // replaces both via assignRankKeys() once the pool is known.
                     order_key: sha1First8(displayDomain),
                     shuffle_key: sha1First8(`${displayDomain}:lb2`),
                 },
@@ -803,25 +801,29 @@ function formatLguLogosYaml(rows) {
         .join('\n');
 }
 
-// Hashes the bytes actually on disk for every resolved row (fresh or
-// kept-last-known-good), keyed by domain — the single read pass that both
-// findDuplicateLogos() and assignRankKeys()'s anti-adjacency swap need.
+// Strips SVG `id="..."` attributes before hashing — a doc-label with no
+// visual effect, but exporters embed one per file, so two visually
+// identical SVGs (e.g. bettersolano.org.svg / bettercainta.org.svg, same
+// starter-kit art) hash as different files without this.
+function normalizeForHashing(buf, ext) {
+    if (ext !== 'svg') return buf;
+    return Buffer.from(buf.toString('utf8').replace(/\sid="[^"]*"/g, ''));
+}
+
+// Hashes each resolved row's file on disk, keyed by domain.
 function computeContentHashes(rows, logoDir = LOGO_DIR) {
     const byDomain = new Map();
     for (const row of rows) {
         const filePath = path.join(logoDir, row.file);
         if (!fs.existsSync(filePath)) continue;
-        byDomain.set(row.domain, crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex'));
+        const normalized = normalizeForHashing(fs.readFileSync(filePath), row.ext);
+        byDomain.set(row.domain, crypto.createHash('sha256').update(normalized).digest('hex'));
     }
     return byDomain;
 }
 
-// Two portals can legitimately end up serving the same image bytes (a shared
-// starter template's default icon, left unedited) — the crawl has no way to
-// tell which one is the "real" owner, so this doesn't drop or pick a winner.
-// It only flags the collision in the run summary, same as a Featured
-// rejection, for a human to sort out (surfaced in the portal-requirements
-// Discussion post).
+// Groups domains sharing a hash. Doesn't drop or pick a winner — just
+// flagged in the run summary for a human to sort out.
 function findDuplicateLogos(hashByDomain) {
     const byHash = new Map();
     for (const [domain, hash] of hashByDomain) {
@@ -831,17 +833,10 @@ function findDuplicateLogos(hashByDomain) {
     return [...byHash.values()].filter((domains) => domains.length > 1);
 }
 
-// If two byte-identical Logos would land next to each other after sorting by
-// the base key, swap the second one forward to the next row that isn't a
-// duplicate of it. Resolves the realistic case (a small handful of duplicate
-// pairs) without a full optimal rearrangement — if every row in the set
-// shares one hash, adjacency can't be avoided and the run is left as-is.
-//
-// The marquee track duplicates this array end-to-end for a seamless loop
-// (logo-band.html renders `row + row` so translateX(-50%) has no visible
-// seam) — that means index 0 and the LAST index are visually adjacent too,
-// at the wrap point. So this treats the array as circular: a linear pass
-// first, then one more check across the wrap.
+// Swaps adjacent same-hash rows apart, greedily, best-effort (gives up if
+// there's nothing non-duplicate to swap in). Also checks the wrap: the
+// marquee duplicates this array end-to-end for a seamless loop, so index 0
+// and the last index render adjacent too.
 function separateAdjacentDuplicates(rows, hashByDomain) {
     const arr = rows.slice();
     const hashOf = (row) => hashByDomain.get(row.domain);
@@ -857,15 +852,9 @@ function separateAdjacentDuplicates(rows, hashByDomain) {
     if (arr.length > 1) {
         const wrapHash = hashOf(arr[0]);
         if (wrapHash !== undefined && wrapHash === hashOf(arr[arr.length - 1])) {
-            // Pull the last slot's twin inward to the nearest earlier row
-            // that isn't itself a wrapHash duplicate — same greedy,
-            // best-effort approach as the linear pass above. Only commit the
-            // swap if it doesn't reintroduce a linear adjacency at the
-            // landing spot: with too few unique rows to go around (e.g. 2
-            // duplicates and only 1 unique row total), "fixing" the wrap can
-            // just relocate the same collision next to a different
-            // neighbour — in that case leave the wrap as the one unavoidable
-            // seam rather than trade one collision for another.
+            // Pull the last slot's twin inward; only commit if that doesn't
+            // create a new collision at the landing spot (can happen when
+            // there aren't enough unique rows to go around).
             let k = arr.length - 2;
             while (k > 0 && hashOf(arr[k]) === wrapHash) k--;
             if (k > 0) {
@@ -883,12 +872,9 @@ function separateAdjacentDuplicates(rows, hashByDomain) {
     return arr;
 }
 
-// Liquid renders the marquee rows by sorting on `order_key`/`shuffle_key`, so
-// the only way for the anti-adjacency swap above to survive into the render
-// is to bake the swapped order into the sort key itself: sort by the row's
-// current key, separate duplicates, then replace the key with a zero-padded
-// rank reflecting that final sequence. Mutates `targetField` on the row
-// objects in place.
+// Sorts by baseKeyField, separates duplicates, then replaces targetField
+// with a zero-padded rank (Liquid sorts by the key, so the key IS the
+// render order). Mutates rows in place.
 function assignRankKeys(rows, baseKeyField, hashByDomain, targetField) {
     const sorted = rows
         .slice()
@@ -1076,6 +1062,7 @@ module.exports = {
     judgeLogo,
     parseExistingLguLogos,
     formatLguLogosYaml,
+    normalizeForHashing,
     computeContentHashes,
     findDuplicateLogos,
     separateAdjacentDuplicates,
