@@ -104,9 +104,22 @@ async function candidates(pageUrl, html) {
 
     out.push({ source: 'favicon.ico', url: abs('/favicon.ico'), declaredPx: 0 });
 
-    // Largest declared size first, biased to the earlier (better) sources.
-    const rank = { 'apple-touch-icon': 0, manifest: 1, 'rel-icon': 2, 'favicon.ico': 3 };
-    return out.sort((a, b) => rank[a.source] - rank[b.source] || b.declaredPx - a.declaredPx);
+    // Prefer transparent-artwork sources over apple-touch-icon. Apple's own
+    // spec expects apple-touch-icon to be an OPAQUE square with internal
+    // padding — fine on iOS, but on the plateless Logo wall (variant B) that
+    // reads as a boxy tile next to floating marks from rel=icon/SVG sources.
+    // SVG rel-icon ranks highest (vector, almost always transparent, no
+    // resolution ceiling), then any other rel-icon, then the manifest (mixed:
+    // maskable icons carry the same opaque-square convention as
+    // apple-touch-icon), then apple-touch-icon itself, then the raw favicon.
+    const rank = (c) => {
+        if (c.source === 'rel-icon' && c.svg) return 0;
+        if (c.source === 'rel-icon') return 1;
+        if (c.source === 'manifest') return 2;
+        if (c.source === 'apple-touch-icon') return 3;
+        return 4; // favicon.ico
+    };
+    return out.sort((a, b) => rank(a) - rank(b) || b.declaredPx - a.declaredPx);
 }
 
 // PNG/ICO/SVG intrinsic size, zero-dep. Prototype-grade.
