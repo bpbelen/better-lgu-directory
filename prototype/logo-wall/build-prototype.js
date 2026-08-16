@@ -30,8 +30,34 @@ const itemsFrom = (list) =>
         .join('\n  ');
 
 const items = itemsFrom(logos);
-// B's second row is offset so the two rows aren't the same sequence twice.
-const itemsOffset = itemsFrom(logos.slice(Math.floor(logos.length / 2)).concat(logos.slice(0, Math.floor(logos.length / 2))));
+
+// B's second row needs a genuinely different ORDER, not a rotation of the
+// same sequence. The rows scroll at equal speed in opposite directions, so
+// their relative phase drifts continuously — a rotated (same-relative-order)
+// row still drifts into full alignment periodically, just at a different
+// moment, and then the whole row appears to "match" the first. A shuffle
+// breaks the shared sequence itself, so only isolated single icons can ever
+// coincide, never a run of them. Seeded (mulberry32) so the layout is stable
+// across rebuilds instead of reshuffling on every run.
+function mulberry32(seed) {
+    return function () {
+        seed |= 0;
+        seed = (seed + 0x6d2b79f5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+function shuffled(list, seed) {
+    const rand = mulberry32(seed);
+    const arr = list.slice();
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(rand() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+const itemsShuffled = itemsFrom(shuffled(logos, 20260816));
 
 // The marquee track is duplicated so the loop is seamless.
 const track = (extraClass = '', src = items) =>
@@ -66,7 +92,7 @@ const variants = {
         name: 'Full-bleed ornament, two rows',
         html: `<section class="lw lw-b" data-variant="B">
   <div class="lw-marquee">${track('lw-fwd')}</div>
-  <div class="lw-marquee lw-b-second">${track('lw-rev', itemsOffset)}</div>
+  <div class="lw-marquee lw-b-second">${track('lw-rev', itemsShuffled)}</div>
 </section>`,
     },
     C: {
