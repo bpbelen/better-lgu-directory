@@ -252,20 +252,42 @@ console.log('\nlogoCandidates() — chain order');
     console.log('\nseparateAdjacentDuplicates() / assignRankKeys()');
 
     test('swaps an adjacent duplicate forward to break up the run', () => {
+        // Two unique rows either side of the duplicate pair — enough slack
+        // that both the linear run AND the wrap seam are fully solvable (a
+        // lone unique row can't satisfy both at once, see the "leaves a
+        // 2-duplicates-1-unique wrap unresolved" test below).
         const hashes = new Map([
+            ['w', 'unique1'],
             ['a', 'dup'],
             ['b', 'dup'],
-            ['c', 'unique'],
+            ['z', 'unique2'],
         ]);
         const separated = separateAdjacentDuplicates(
-            [{ domain: 'a' }, { domain: 'b' }, { domain: 'c' }],
+            [{ domain: 'w' }, { domain: 'a' }, { domain: 'b' }, { domain: 'z' }],
             hashes,
         );
         const domains = separated.map((r) => r.domain);
-        assert.notStrictEqual(domains[0], undefined);
         for (let i = 0; i < domains.length - 1; i++) {
             assert.notStrictEqual(hashes.get(domains[i]), hashes.get(domains[i + 1]));
         }
+        assert.notStrictEqual(hashes.get(domains[0]), hashes.get(domains[domains.length - 1]));
+    });
+
+    test('leaves a 2-duplicates-1-unique wrap unresolved rather than trade one collision for another', () => {
+        // With only one unique row to go around, the two duplicates can't
+        // avoid being adjacent SOMEWHERE in the cycle — pigeonhole. The
+        // safety check should refuse the wrap swap here rather than just
+        // relocate the same collision next to the unique row's other side.
+        const hashes = new Map([
+            ['a', 'dup'],
+            ['c', 'unique'],
+            ['b', 'dup'],
+        ]);
+        const separated = separateAdjacentDuplicates(
+            [{ domain: 'a' }, { domain: 'c' }, { domain: 'b' }],
+            hashes,
+        );
+        assert.deepStrictEqual(separated.map((r) => r.domain), ['a', 'c', 'b']);
     });
 
     test('leaves a run alone when there is nothing non-duplicate to swap in', () => {
@@ -275,6 +297,37 @@ console.log('\nlogoCandidates() — chain order');
         ]);
         const separated = separateAdjacentDuplicates([{ domain: 'a' }, { domain: 'b' }], hashes);
         assert.deepStrictEqual(separated.map((r) => r.domain), ['a', 'b']);
+    });
+
+    test('separates a duplicate pair split across the wrap seam (first + last)', () => {
+        // The marquee duplicates this array end-to-end for a seamless loop,
+        // so index 0 and the last index render next to each other even
+        // though they're not linearly adjacent in this array.
+        const hashes = new Map([
+            ['a', 'dup'],
+            ['b', 'unique1'],
+            ['c', 'unique2'],
+            ['d', 'dup'],
+        ]);
+        const separated = separateAdjacentDuplicates(
+            [{ domain: 'a' }, { domain: 'b' }, { domain: 'c' }, { domain: 'd' }],
+            hashes,
+        );
+        const domains = separated.map((r) => r.domain);
+        assert.notStrictEqual(hashes.get(domains[0]), hashes.get(domains[domains.length - 1]));
+    });
+
+    test('wrap-seam fix leaves the set alone when nothing non-duplicate exists to swap in', () => {
+        const hashes = new Map([
+            ['a', 'dup'],
+            ['b', 'dup'],
+            ['c', 'dup'],
+        ]);
+        const separated = separateAdjacentDuplicates(
+            [{ domain: 'a' }, { domain: 'b' }, { domain: 'c' }],
+            hashes,
+        );
+        assert.deepStrictEqual(separated.map((r) => r.domain), ['a', 'b', 'c']);
     });
 
     test('assignRankKeys keeps byte-identical rows apart in the resulting order', () => {
