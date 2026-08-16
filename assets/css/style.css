@@ -496,6 +496,7 @@ main tr:last-child td {
   box-sizing: border-box;
   width: 120px;
   height: 72px;
+  cursor: pointer;
   transition: transform 0.2s ease;
 }
 
