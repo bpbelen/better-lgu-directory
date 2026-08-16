@@ -104,6 +104,10 @@
     </section>
     {% endif %}
 
+    {% if page.title == 'Home' %}
+    {%- include logo-band.html -%}
+    {% endif %}
+
     <main class="max-w-7xl mx-auto px-4 py-8 md:py-16">
         <div class="prose max-w-none prose-lg md:prose-xl">
             <div id="directory">
