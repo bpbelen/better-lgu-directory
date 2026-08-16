@@ -8,13 +8,18 @@
 //
 // Covers: the candidate chain order (SVG rel=icon > other rel=icon > largest
 // manifest icon > apple-touch-icon > favicon.ico), the 64px floor (SVG
-// exempt), the 1.2MB byte ceiling, and SVG sanitization
-// (script/foreignObject/external href rejected). Isolated function tests
-// against fixed inputs — no live HTTP — matching test-featured-eligibility.js;
-// the wired end-to-end behaviour (fetch -> candidate -> row) is left to a
-// live/manual run, same split as the Featured predicate's two test files.
+// exempt), the 1.2MB byte ceiling, SVG sanitization
+// (script/foreignObject/external href rejected), and the duplicate-Logo
+// detection + anti-adjacency rank keys (#179 follow-up). Isolated function
+// tests against fixed inputs — no live HTTP — matching
+// test-featured-eligibility.js; the wired end-to-end behaviour (fetch ->
+// candidate -> row) is left to a live/manual run, same split as the Featured
+// predicate's two test files.
 
 const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const {
     LOGO_MIN_PX,
     LOGO_MAX_BYTES,
@@ -23,6 +28,10 @@ const {
     logoCandidates,
     intrinsicPx,
     svgIsUnsafe,
+    computeContentHashes,
+    findDuplicateLogos,
+    separateAdjacentDuplicates,
+    assignRankKeys,
 } = require('./crawl-lgu-meta.js');
 
 let failures = 0;
@@ -193,6 +202,119 @@ console.log('\nlogoCandidates() — chain order');
             false,
         );
     });
+
+    console.log('\ncomputeContentHashes() / findDuplicateLogos()');
+
+    const fixtureDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lgu-logo-hash-'));
+    const write = (file, content) => fs.writeFileSync(path.join(fixtureDir, file), content);
+    write('a.svg', '<svg>same</svg>');
+    write('b.svg', '<svg>same</svg>');
+    write('c.svg', '<svg>different</svg>');
+
+    test('identical bytes hash the same, different bytes hash differently', () => {
+        const hashes = computeContentHashes(
+            [
+                { domain: 'a.example', file: 'a.svg' },
+                { domain: 'b.example', file: 'b.svg' },
+                { domain: 'c.example', file: 'c.svg' },
+            ],
+            fixtureDir,
+        );
+        assert.strictEqual(hashes.get('a.example'), hashes.get('b.example'));
+        assert.notStrictEqual(hashes.get('a.example'), hashes.get('c.example'));
+    });
+
+    test('groups byte-identical rows and leaves unique ones out', () => {
+        const hashes = computeContentHashes(
+            [
+                { domain: 'a.example', file: 'a.svg' },
+                { domain: 'b.example', file: 'b.svg' },
+                { domain: 'c.example', file: 'c.svg' },
+            ],
+            fixtureDir,
+        );
+        const groups = findDuplicateLogos(hashes);
+        assert.strictEqual(groups.length, 1);
+        assert.deepStrictEqual(groups[0].sort(), ['a.example', 'b.example']);
+    });
+
+    test('reports nothing when every hash is unique', () => {
+        const hashes = computeContentHashes(
+            [
+                { domain: 'a.example', file: 'a.svg' },
+                { domain: 'c.example', file: 'c.svg' },
+            ],
+            fixtureDir,
+        );
+        assert.deepStrictEqual(findDuplicateLogos(hashes), []);
+    });
+
+    console.log('\nseparateAdjacentDuplicates() / assignRankKeys()');
+
+    test('swaps an adjacent duplicate forward to break up the run', () => {
+        const hashes = new Map([
+            ['a', 'dup'],
+            ['b', 'dup'],
+            ['c', 'unique'],
+        ]);
+        const separated = separateAdjacentDuplicates(
+            [{ domain: 'a' }, { domain: 'b' }, { domain: 'c' }],
+            hashes,
+        );
+        const domains = separated.map((r) => r.domain);
+        assert.notStrictEqual(domains[0], undefined);
+        for (let i = 0; i < domains.length - 1; i++) {
+            assert.notStrictEqual(hashes.get(domains[i]), hashes.get(domains[i + 1]));
+        }
+    });
+
+    test('leaves a run alone when there is nothing non-duplicate to swap in', () => {
+        const hashes = new Map([
+            ['a', 'dup'],
+            ['b', 'dup'],
+        ]);
+        const separated = separateAdjacentDuplicates([{ domain: 'a' }, { domain: 'b' }], hashes);
+        assert.deepStrictEqual(separated.map((r) => r.domain), ['a', 'b']);
+    });
+
+    test('assignRankKeys keeps byte-identical rows apart in the resulting order', () => {
+        const hashes = new Map([
+            ['a', 'dup'],
+            ['b', 'dup'],
+            ['c', 'unique1'],
+            ['d', 'unique2'],
+        ]);
+        // Seed order_key so the two duplicates would otherwise sort adjacent.
+        const rows = [
+            { domain: 'a', order_key: '0001' },
+            { domain: 'b', order_key: '0002' },
+            { domain: 'c', order_key: '0003' },
+            { domain: 'd', order_key: '0004' },
+        ];
+        assignRankKeys(rows, 'order_key', hashes, 'order_key');
+        const byRank = rows.slice().sort((x, y) => (x.order_key < y.order_key ? -1 : 1));
+        const domains = byRank.map((r) => r.domain);
+        for (let i = 0; i < domains.length - 1; i++) {
+            assert.notStrictEqual(hashes.get(domains[i]), hashes.get(domains[i + 1]));
+        }
+    });
+
+    test('assignRankKeys produces zero-padded rank strings, not raw hashes', () => {
+        const hashes = new Map([
+            ['a', 'x'],
+            ['b', 'y'],
+        ]);
+        const rows = [
+            { domain: 'a', order_key: '0001' },
+            { domain: 'b', order_key: '0002' },
+        ];
+        assignRankKeys(rows, 'order_key', hashes, 'order_key');
+        for (const row of rows) {
+            assert.match(row.order_key, /^\d{4}$/);
+        }
+    });
+
+    fs.rmSync(fixtureDir, { recursive: true, force: true });
 
     console.log(failures === 0 ? '\n✅ All Logo eligibility tests passed.\n' : `\n❌ ${failures} test(s) failed.\n`);
     process.exit(failures === 0 ? 0 : 1);

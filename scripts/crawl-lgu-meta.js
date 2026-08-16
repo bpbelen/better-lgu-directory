@@ -727,7 +727,10 @@ async function judgeLogo(entry, displayDomain, fetched) {
                     // (see FINDINGS.md on prototype/logo-wall) — sorting by an
                     // unrelated hash is this repo's build-time (Liquid, no
                     // arbitrary JS) substitute for the prototype's mulberry32
-                    // Fisher-Yates shuffle.
+                    // Fisher-Yates shuffle. These are only the SEED values —
+                    // main() replaces both with rank keys once the whole pool
+                    // is known, so byte-identical Logos can be kept apart
+                    // (see assignRankKeys()).
                     order_key: sha1First8(displayDomain),
                     shuffle_key: sha1First8(`${displayDomain}:lb2`),
                 },
@@ -798,6 +801,70 @@ function formatLguLogosYaml(rows) {
             ].join('\n'),
         )
         .join('\n');
+}
+
+// Hashes the bytes actually on disk for every resolved row (fresh or
+// kept-last-known-good), keyed by domain — the single read pass that both
+// findDuplicateLogos() and assignRankKeys()'s anti-adjacency swap need.
+function computeContentHashes(rows, logoDir = LOGO_DIR) {
+    const byDomain = new Map();
+    for (const row of rows) {
+        const filePath = path.join(logoDir, row.file);
+        if (!fs.existsSync(filePath)) continue;
+        byDomain.set(row.domain, crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex'));
+    }
+    return byDomain;
+}
+
+// Two portals can legitimately end up serving the same image bytes (a shared
+// starter template's default icon, left unedited) — the crawl has no way to
+// tell which one is the "real" owner, so this doesn't drop or pick a winner.
+// It only flags the collision in the run summary, same as a Featured
+// rejection, for a human to sort out (surfaced in the portal-requirements
+// Discussion post).
+function findDuplicateLogos(hashByDomain) {
+    const byHash = new Map();
+    for (const [domain, hash] of hashByDomain) {
+        if (!byHash.has(hash)) byHash.set(hash, []);
+        byHash.get(hash).push(domain);
+    }
+    return [...byHash.values()].filter((domains) => domains.length > 1);
+}
+
+// If two byte-identical Logos would land next to each other after sorting by
+// the base key, swap the second one forward to the next row that isn't a
+// duplicate of it. Resolves the realistic case (a small handful of duplicate
+// pairs) without a full optimal rearrangement — if every row in the set
+// shares one hash, adjacency can't be avoided and the run is left as-is.
+function separateAdjacentDuplicates(rows, hashByDomain) {
+    const arr = rows.slice();
+    const hashOf = (row) => hashByDomain.get(row.domain);
+    for (let i = 0; i < arr.length - 1; i++) {
+        const h = hashOf(arr[i]);
+        if (h === undefined || h !== hashOf(arr[i + 1])) continue;
+        let j = i + 2;
+        while (j < arr.length && hashOf(arr[j]) === h) j++;
+        if (j < arr.length) {
+            [arr[i + 1], arr[j]] = [arr[j], arr[i + 1]];
+        }
+    }
+    return arr;
+}
+
+// Liquid renders the marquee rows by sorting on `order_key`/`shuffle_key`, so
+// the only way for the anti-adjacency swap above to survive into the render
+// is to bake the swapped order into the sort key itself: sort by the row's
+// current key, separate duplicates, then replace the key with a zero-padded
+// rank reflecting that final sequence. Mutates `targetField` on the row
+// objects in place.
+function assignRankKeys(rows, baseKeyField, hashByDomain, targetField) {
+    const sorted = rows
+        .slice()
+        .sort((a, b) => (a[baseKeyField] < b[baseKeyField] ? -1 : a[baseKeyField] > b[baseKeyField] ? 1 : 0));
+    const separated = separateAdjacentDuplicates(sorted, hashByDomain);
+    separated.forEach((row, i) => {
+        row[targetField] = String(i).padStart(4, '0');
+    });
 }
 
 async function main() {
@@ -905,6 +972,16 @@ async function main() {
         console.log(`\n${featuredSummary}`);
     }
 
+    // Re-key row order AFTER the full pool is known: order_key/shuffle_key
+    // start as domain hashes (assigned per-row in judgeLogo(), before any
+    // row knows about its neighbours), then get replaced here with
+    // rank-based keys that keep byte-identical Logos from landing adjacent
+    // in either rendered row. Both content-hash uses (this + the duplicate
+    // report below) share one file-read pass.
+    const contentHashByDomain = computeContentHashes(logoRows);
+    assignRankKeys(logoRows, 'order_key', contentHashByDomain, 'order_key');
+    assignRankKeys(logoRows, 'shuffle_key', contentHashByDomain, 'shuffle_key');
+
     const logoDataDir = path.dirname(LOGO_META_PATH);
     if (!fs.existsSync(logoDataDir)) {
         fs.mkdirSync(logoDataDir, { recursive: true });
@@ -914,6 +991,16 @@ async function main() {
     const logoSummary = formatIneligibleSummary(logoRejections, 'Logo ineligible');
     if (logoSummary) {
         console.log(`\n${logoSummary}`);
+    }
+
+    const duplicateLogoGroups = findDuplicateLogos(contentHashByDomain);
+    if (duplicateLogoGroups.length > 0) {
+        console.log(
+            `\n⚠️  Duplicate Logo bytes (${duplicateLogoGroups.length} group(s)) — same image resolved for multiple portals, not auto-resolved (kept apart in the render, flagged here for a human to sort out):`,
+        );
+        for (const domains of duplicateLogoGroups) {
+            console.log(`   - ${domains.join(', ')}`);
+        }
     }
 }
 
@@ -957,4 +1044,8 @@ module.exports = {
     judgeLogo,
     parseExistingLguLogos,
     formatLguLogosYaml,
+    computeContentHashes,
+    findDuplicateLogos,
+    separateAdjacentDuplicates,
+    assignRankKeys,
 };
