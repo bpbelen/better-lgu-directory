@@ -1,0 +1,106 @@
+{%- comment -%}
+Logo wall (#179). A full-bleed, two-row, counter-scrolling band of resolved
+Better LGU portal Logos, placed between the Featured hero and the directory
+table. Pure build-time Liquid, no JavaScript.
+
+Pool: `site.data.lgu-logos`, written by the Logo predicate in
+scripts/crawl-lgu-meta.js on `main` (see CONTEXT.md's "Sync pipeline" entry
+and that script's judgeLogo() for the resolution chain / sanitization).
+Ported from the validated prototype on `prototype/logo-wall` (variant B) —
+see prototype/logo-wall/FINDINGS.md for the crawl measurements behind the
+byte ceiling, size floor, and chain order.
+
+Two rows, two independent stable orders: row 1 sorts by `order_key`, row 2 by
+`shuffle_key` — a differently-salted hash of the same domain (see
+judgeLogo()'s comment in crawl-lgu-meta.js). Sorting by an unrelated hash,
+rather than reordering the same sequence, is this repo's build-time
+(Liquid — no arbitrary JS) substitute for the prototype's seeded mulberry32
+Fisher-Yates shuffle: it keeps the two rows from ever drifting back into a
+shared run of matches as they counter-scroll at equal speed.
+
+The caption count reads the number of 🟢 Active Entries in `site.data.lgus`,
+NOT the resolved Logo pool size — sourcing it from the crawl would make the
+number drop whenever a single portal shipped a broken favicon, which reads as
+LGUs leaving the movement rather than a crawl hiccup.
+
+Below ~8 resolved Logos, OR under `prefers-reduced-motion: reduce`, the
+marquee is replaced by a single bounded horizontal-scroll rail — one row,
+never a wrapping grid, so the directory table below never gets pushed further
+down as the directory grows. Below the threshold that rail is the ONLY markup
+rendered (no unused animated DOM to ship for a handful of Logos); at/above it,
+both markups render and assets/css/style.css's `prefers-reduced-motion` query
+toggles between them, since Jekyll has no server-side media-query equivalent.
+`display:none` fully removes the hidden one from the accessibility tree, so a
+screen reader is never offered the same set of links twice.
+
+If the pool is empty, this include renders nothing — no divide-by-zero, no
+placeholder band (same "no fallback" rule the Featured card follows).
+{%- endcomment -%}
+{%- assign pool = site.data.lgu-logos -%}
+{%- if pool and pool.size > 0 -%}
+  {%- assign active_count = site.data.lgus | where: "status", "🟢 Active" | size -%}
+  {%- assign row1 = pool | sort: "order_key" -%}
+  {%- assign row2 = pool | sort: "shuffle_key" -%}
+  <section class="lw">
+    <p class="lw-caption">{{ active_count }} Better LGU portals and counting</p>
+    {%- if pool.size < 8 -%}
+      <ul class="lw-rail" aria-label="Better LGU portals">
+        {%- for l in row1 -%}
+          <li class="lw-item">
+            <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+              <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <div class="lw-marquee-rows">
+        <div class="lw-marquee">
+          <ul class="lw-track lw-fwd" aria-label="Better LGU portals">
+            {%- for l in row1 -%}
+              <li class="lw-item">
+                <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+                </a>
+              </li>
+            {%- endfor -%}
+            {%- for l in row1 -%}
+              <li class="lw-item" aria-hidden="true">
+                <a class="lw-link" href="https://{{ l.domain }}" tabindex="-1">
+                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="" loading="lazy">
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class="lw-marquee lw-second-row">
+          <ul class="lw-track lw-rev" aria-label="Better LGU portals">
+            {%- for l in row2 -%}
+              <li class="lw-item">
+                <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+                </a>
+              </li>
+            {%- endfor -%}
+            {%- for l in row2 -%}
+              <li class="lw-item" aria-hidden="true">
+                <a class="lw-link" href="https://{{ l.domain }}" tabindex="-1">
+                  <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="" loading="lazy">
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+      <ul class="lw-rail lw-static-rail" aria-label="Better LGU portals">
+        {%- for l in row1 -%}
+          <li class="lw-item">
+            <a class="lw-link" href="https://{{ l.domain }}" target="_blank" rel="noopener noreferrer">
+              <img class="lw-img" src="{{ site.baseurl }}assets/images/lgu-logos/{{ l.file }}" alt="{{ l.name }}" loading="lazy">
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </section>
+{%- endif -%}
