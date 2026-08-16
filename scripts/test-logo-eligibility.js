@@ -28,6 +28,7 @@ const {
     logoCandidates,
     intrinsicPx,
     svgIsUnsafe,
+    normalizeForHashing,
     computeContentHashes,
     findDuplicateLogos,
     separateAdjacentDuplicates,
@@ -214,9 +215,9 @@ console.log('\nlogoCandidates() — chain order');
     test('identical bytes hash the same, different bytes hash differently', () => {
         const hashes = computeContentHashes(
             [
-                { domain: 'a.example', file: 'a.svg' },
-                { domain: 'b.example', file: 'b.svg' },
-                { domain: 'c.example', file: 'c.svg' },
+                { domain: 'a.example', file: 'a.svg', ext: 'svg' },
+                { domain: 'b.example', file: 'b.svg', ext: 'svg' },
+                { domain: 'c.example', file: 'c.svg', ext: 'svg' },
             ],
             fixtureDir,
         );
@@ -227,9 +228,9 @@ console.log('\nlogoCandidates() — chain order');
     test('groups byte-identical rows and leaves unique ones out', () => {
         const hashes = computeContentHashes(
             [
-                { domain: 'a.example', file: 'a.svg' },
-                { domain: 'b.example', file: 'b.svg' },
-                { domain: 'c.example', file: 'c.svg' },
+                { domain: 'a.example', file: 'a.svg', ext: 'svg' },
+                { domain: 'b.example', file: 'b.svg', ext: 'svg' },
+                { domain: 'c.example', file: 'c.svg', ext: 'svg' },
             ],
             fixtureDir,
         );
@@ -241,12 +242,38 @@ console.log('\nlogoCandidates() — chain order');
     test('reports nothing when every hash is unique', () => {
         const hashes = computeContentHashes(
             [
-                { domain: 'a.example', file: 'a.svg' },
-                { domain: 'c.example', file: 'c.svg' },
+                { domain: 'a.example', file: 'a.svg', ext: 'svg' },
+                { domain: 'c.example', file: 'c.svg', ext: 'svg' },
             ],
             fixtureDir,
         );
         assert.deepStrictEqual(findDuplicateLogos(hashes), []);
+    });
+
+    console.log('\nnormalizeForHashing()');
+
+    test('strips an SVG root id= so two visually-identical exports hash the same', () => {
+        const a = Buffer.from('<svg id="better-solano" viewBox="0 0 250 250"><path d="M0 0"/></svg>');
+        const b = Buffer.from('<svg id="better-cainta" viewBox="0 0 250 250"><path d="M0 0"/></svg>');
+        assert.strictEqual(normalizeForHashing(a, 'svg').equals(normalizeForHashing(b, 'svg')), true);
+    });
+
+    test('leaves non-SVG bytes untouched', () => {
+        const buf = Buffer.from([0x89, 0x50, 0x4e, 0x47]);
+        assert.strictEqual(normalizeForHashing(buf, 'png'), buf);
+    });
+
+    test('computeContentHashes catches id-only SVG differences as duplicates', () => {
+        write('solano.svg', '<svg id="better-solano" viewBox="0 0 250 250"><path d="M0 0"/></svg>');
+        write('cainta.svg', '<svg id="better-cainta" viewBox="0 0 250 250"><path d="M0 0"/></svg>');
+        const hashes = computeContentHashes(
+            [
+                { domain: 'bettersolano.org', file: 'solano.svg', ext: 'svg' },
+                { domain: 'bettercainta.org', file: 'cainta.svg', ext: 'svg' },
+            ],
+            fixtureDir,
+        );
+        assert.strictEqual(hashes.get('bettersolano.org'), hashes.get('bettercainta.org'));
     });
 
     console.log('\nseparateAdjacentDuplicates() / assignRankKeys()');
