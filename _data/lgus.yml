@@ -790,6 +790,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@daveteves](https://github.com/daveteves)"
+- name: "Magsaysay, Davao del Sur"
+  domain: "-"
+  repo: "[GitHub](https://github.com/ianmuico/better-magsaysay)"
+  repo_owner: "ianmuico"
+  repo_name: "better-magsaysay"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@ianmuico](https://github.com/ianmuico)"
 - name: "Paombong, Bulacan"
   domain: "-"
   repo: "-"
