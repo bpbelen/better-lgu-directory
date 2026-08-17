@@ -554,14 +554,14 @@
   maintainer: "[@rodneydelacruz](https://github.com/rodneydelacruz)"
 - name: "Bacoor City, Cavite"
   domain: "-"
-  repo: "[GitHub](https://github.com/riamjs/betterbacoor)"
-  repo_owner: "riamjs"
+  repo: "[GitHub](https://github.com/0phl/betterbacoor)"
+  repo_owner: "0phl"
   repo_name: "betterbacoor"
   socials: []
   status: "🔵 Planned"
   stale: false
   open_for_adoption: false
-  maintainer: "[@riamjs](https://github.com/riamjs)"
+  maintainer: "[@0phl](https://github.com/0phl)"
 - name: "Lucena City, Quezon"
   domain: "-"
   repo: "-"
