@@ -826,6 +826,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@francisdiaz22](https://github.com/francisdiaz22)"
+- name: "Maddela, Quirino"
+  domain: "[bettermaddela.vercel.app](https://bettermaddela.vercel.app/)"
+  repo: "[GitHub](https://github.com/Hendrizzzz/bettermaddela)"
+  repo_owner: "Hendrizzzz"
+  repo_name: "bettermaddela"
+  socials: []
+  status: "🟡 Work in Progress"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@Hendrizzzz](https://github.com/Hendrizzzz)"
 - name: "Caloocan City, Metro Manila"
   domain: "-"
   repo: "-"
