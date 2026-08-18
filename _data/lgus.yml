@@ -808,6 +808,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@denvdev](https://github.com/denvdev)"
+- name: "Surallah, South Cotabato"
+  domain: "[bettersurallah.org](https://bettersurallah.org)"
+  repo: "[GitHub](https://github.com/average04/bettersurallah)"
+  repo_owner: "average04"
+  repo_name: "bettersurallah"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@average4](https://github.com/average04)"
 - name: "Malolos, Bulacan"
   domain: "-"
   repo: "-"
