@@ -808,6 +808,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@denvdev](https://github.com/denvdev)"
+- name: "City of Mati, Davao Oriental"
+  domain: "-"
+  repo: "[GitHub](https://github.com/kaarlosasiang/bettermaticity)"
+  repo_owner: "kaarlosasiang"
+  repo_name: "bettermaticity"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@kaarlosasiang](https://github.com/kaarlosasiang)"
 - name: "Surallah, South Cotabato"
   domain: "[bettersurallah.org](https://bettersurallah.org)"
   repo: "[GitHub](https://github.com/average04/bettersurallah)"
