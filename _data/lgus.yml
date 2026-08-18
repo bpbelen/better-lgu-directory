@@ -826,3 +826,11 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@francisdiaz22](https://github.com/francisdiaz22)"
+- name: "Caloocan City, Metro Manila"
+  domain: "-"
+  repo: "-"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@angelicatanagras](https://github.com/angelicatanagras)"
