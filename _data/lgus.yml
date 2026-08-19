@@ -842,10 +842,15 @@
   open_for_adoption: false
   maintainer: "[@average4](https://github.com/average04)"
 - name: "Malolos, Bulacan"
-  domain: "-"
-  repo: "-"
-  socials: []
-  status: "🔵 Planned"
+  domain: "[bettermalolos.org](https://bettermalolos.org/)"
+  repo: "[GitHub](https://github.com/francisdiaz22/bettermalolos)"
+  repo_owner: "francisdiaz22"
+  repo_name: "bettermalolos"
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://www.facebook.com/bettermalolos.org"
+  status: "🟡 Work in Progress"
   stale: false
   open_for_adoption: false
   maintainer: "[@francisdiaz22](https://github.com/francisdiaz22)"
