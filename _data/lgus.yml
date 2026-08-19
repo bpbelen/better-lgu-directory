@@ -869,9 +869,11 @@
   maintainer: "[@Hendrizzzz](https://github.com/Hendrizzzz)"
 - name: "Caloocan City, Metro Manila"
   domain: "-"
-  repo: "-"
+  repo: "[GitHub](https://github.com/angelicatanagras/bettercaloocan)"
+  repo_owner: "angelicatanagras"
+  repo_name: "bettercaloocan"
   socials: []
-  status: "🔵 Planned"
+  status: "🟡 Work in Progress"
   stale: false
   open_for_adoption: false
   maintainer: "[@angelicatanagras](https://github.com/angelicatanagras)"
