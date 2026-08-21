@@ -877,3 +877,13 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@angelicatanagras](https://github.com/angelicatanagras)"
+- name: "Dagupan City, Pangasinan"
+  domain: "-"
+  repo: "[GitHub](https://github.com/jamesjmnz/better-dagupan)"
+  repo_owner: "jamesjmnz"
+  repo_name: "better-dagupan"
+  socials: []
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@jamesjmnz](https://github.com/jamesjmnz)"
