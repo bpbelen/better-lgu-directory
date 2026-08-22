@@ -877,6 +877,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@angelicatanagras](https://github.com/angelicatanagras)"
+- name: "Zamboanga City, Zamboanga del Sur"
+  domain: "-"
+  repo: "[GitHub](https://github.com/RALPH22222/betterzamboangacity)"
+  repo_owner: "RALPH22222"
+  repo_name: "betterzamboangacity"
+  socials: []
+  status: "🟡 Work in Progress"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@RALPH22222](https://github.com/RALPH22222)"
 - name: "Dagupan City, Pangasinan"
   domain: "-"
   repo: "[GitHub](https://github.com/jamesjmnz/better-dagupan)"
