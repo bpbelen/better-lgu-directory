@@ -887,3 +887,13 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@jamesjmnz](https://github.com/jamesjmnz)"
+- name: "Baguio City, Benguet"
+  domain: "[betterbaguio.org](https://betterbaguio.org)"
+  repo: "[GitHub](https://github.com/ashier/betterbaguio)"
+  repo_owner: "ashier"
+  repo_name: "betterbaguio"
+  socials: []
+  status: "🟡 Work in Progress"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@ashier](https://github.com/ashier)"
