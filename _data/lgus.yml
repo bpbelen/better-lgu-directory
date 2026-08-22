@@ -727,12 +727,21 @@
   open_for_adoption: false
   maintainer: "[@brixavengoza](https://github.com/brixavengoza)"
 - name: "Kabugao, Apayao"
-  domain: "-"
+  domain: "[betterkabugao.org](https://betterkabugao.org)"
   repo: "[GitHub](https://github.com/KuyaLoy/betterkabugao)"
   repo_owner: "KuyaLoy"
   repo_name: "betterkabugao"
-  socials: []
-  status: "🔵 Planned"
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://www.facebook.com/BetterKabugao"
+    - platform: "instagram"
+      label: "Instagram"
+      url: "https://www.instagram.com/betterkabugao"
+    - platform: "threads"
+      label: "Threads"
+      url: "https://www.threads.com/@betterkabugao"
+  status: "🟢 Active"
   stale: false
   open_for_adoption: false
   maintainer: "[@KuyaLoy](https://github.com/KuyaLoy)"

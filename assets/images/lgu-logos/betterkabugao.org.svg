@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#00142F" />
+  <g transform="translate(6.4 4.8) scale(0.32)">
+    <g id="sunrise" fill="#FFB900">
+      <path d="M69 29 58 15 65 10 77 28Z" />
+      <path d="M85 24V4h9v20Z" />
+      <path d="m101 28 13-18 7 6-12 16Z" />
+    </g>
+    <g id="kabugao-silhouette" fill="#FFFFFF">
+      <path d="M88.8 23.5 97.7 24.1 102.4 54.8 144 97.4 133.6 122.9 112.3 111.5 106.5 112 75.8 120.8 58.7 136.5 51.9 132.8 37.9 135.4 34.2 129.7 32.1 108.9 16 95.9 36.3 95.3 49.8 79.7 80 24.6Z" />
+    </g>
+  </g>
+</svg>
