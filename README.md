@@ -94,6 +94,8 @@ A community-maintained directory of **Better LGU** digital transparency portals 
 | Maddela, Quirino                    | [bettermaddela.vercel.app](https://bettermaddela.vercel.app/) | [GitHub](https://github.com/Hendrizzzz/bettermaddela)                          | -                                                                  | 🟡 Work in Progress    | [@Hendrizzzz](https://github.com/Hendrizzzz)                                                                                     |
 | Caloocan City, Metro Manila         | -                                                             | [GitHub](https://github.com/angelicatanagras/bettercaloocan)                   | -                                                                  | 🟡 Work in Progress    | [@angelicatanagras](https://github.com/angelicatanagras)                                                                         |
 | Dagupan City, Pangasinan            | -                                                             | [GitHub](https://github.com/jamesjmnz/better-dagupan)                          | -                                                                  | 🔵 Planned             | [@jamesjmnz](https://github.com/jamesjmnz)                                                                                       |
+| Baguio City, Benguet                | [betterbaguio.org](https://betterbaguio.org)                  | [GitHub](https://github.com/ashier/betterbaguio)                               | -                                                                  | 🟡 Work in Progress    | [@ashier](https://github.com/ashier)                                                                                             |
+
 
 <!-- SYNC_LGU_TABLE_END -->
 
