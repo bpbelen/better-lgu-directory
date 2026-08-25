@@ -862,7 +862,7 @@
     - platform: "facebook"
       label: "Facebook"
       url: "https://www.facebook.com/bettermalolos.org"
-  status: "🟡 Work in Progress"
+  status: "🟢 Active"
   stale: false
   open_for_adoption: false
   maintainer: "[@francisdiaz22](https://github.com/francisdiaz22)"
