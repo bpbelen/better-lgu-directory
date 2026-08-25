@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <g id="ray">
+      <polygon points="100,10 110,40 100,50 90,40" fill="#facc15"/>
+    </g>
+  </defs>
+  
+  <!-- Sun -->
+  <circle cx="100" cy="80" r="45" fill="#facc15"/>
+  <use href="#ray" />
+  <use href="#ray" transform="rotate(45 100 80)" />
+  <use href="#ray" transform="rotate(90 100 80)" />
+  <use href="#ray" transform="rotate(135 100 80)" />
+  <use href="#ray" transform="rotate(180 100 80)" />
+  <use href="#ray" transform="rotate(225 100 80)" />
+  <use href="#ray" transform="rotate(270 100 80)" />
+  <use href="#ray" transform="rotate(315 100 80)" />
+
+  <!-- Mountain -->
+  <path d="M 20 160 L 95 60 L 160 160 Z" fill="#1e3a8a"/>
+  <!-- Mountain Snow Peak -->
+  <path d="M 95 60 L 115 85 L 105 95 L 95 85 L 85 95 L 75 85 Z" fill="#ffffff"/>
+  
+  <!-- Smaller Mountain Right -->
+  <path d="M 120 160 L 155 100 L 190 160 Z" fill="#1e3a8a"/>
+  <path d="M 155 100 L 165 115 L 155 120 L 145 115 Z" fill="#ffffff"/>
+
+  <!-- Back Wave (light blue) -->
+  <path d="M 0 170 Q 50 120 100 170 T 200 170 L 200 200 L 0 200 Z" fill="#7dd3fc"/>
+  
+  <!-- Front Wave (blue) -->
+  <path d="M -10 190 Q 60 130 110 190 T 210 190 L 210 200 L -10 200 Z" fill="#0284c7"/>
+  
+  <!-- Cresting Wave Left -->
+  <path d="M 0 180 C 40 120, 80 140, 70 180 C 60 150, 30 160, 0 190 Z" fill="#ffffff"/>
+  <path d="M 15 170 C 45 130, 70 150, 60 180 C 50 160, 25 160, 15 190 Z" fill="#38bdf8"/>
+</svg>

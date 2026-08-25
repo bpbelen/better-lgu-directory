@@ -676,12 +676,12 @@
   open_for_adoption: false
   maintainer: "[@ikmespinoza](https://github.com/ikmespinoza)"
 - name: "Baler, Aurora"
-  domain: "-"
+  domain: "[betterbaler.org](https://betterbaler.org/)"
   repo: "[GitHub](https://github.com/tekwicks/betterbaler)"
   repo_owner: "tekwicks"
   repo_name: "betterbaler"
   socials: []
-  status: "🟡 Work in Progress"
+  status: "🟢 Active"
   stale: false
   open_for_adoption: false
   maintainer: "[@tekwicks](https://github.com/tekwicks)"
