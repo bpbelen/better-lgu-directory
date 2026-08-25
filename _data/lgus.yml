@@ -877,12 +877,12 @@
   open_for_adoption: false
   maintainer: "[@Hendrizzzz](https://github.com/Hendrizzzz)"
 - name: "Caloocan City, Metro Manila"
-  domain: "-"
+  domain: "[bettercaloocan.org](https://www.bettercaloocan.org/)"
   repo: "[GitHub](https://github.com/angelicatanagras/bettercaloocan)"
   repo_owner: "angelicatanagras"
   repo_name: "bettercaloocan"
   socials: []
-  status: "🟡 Work in Progress"
+  status: "🟢 Active"
   stale: false
   open_for_adoption: false
   maintainer: "[@angelicatanagras](https://github.com/angelicatanagras)"
