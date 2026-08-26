@@ -926,6 +926,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@ashier](https://github.com/ashier)"
+- name: "Trece Martires City, Cavite"
+  domain: "[bettertrecemartires.org](https://bettertrecemartires.org)"
+  repo: "[GitHub](https://github.com/hiroqt/bettertrece)"
+  repo_owner: "hiroqt"
+  repo_name: "bettertrece"
+  socials: []
+  status: "🟢 Active"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@hiroqt](https://github.com/hiroqt)"
 - name: "Pagsanjan, Laguna"
   domain: "-"
   repo: "-"
