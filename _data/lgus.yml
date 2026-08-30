@@ -944,3 +944,16 @@
   stale: false
   open_for_adoption: false
   maintainer: "[@rswlljms](https://github.com/rswlljms)"
+- name: "Naic, Cavite"
+  domain: "-"
+  repo: "[GitHub](https://github.com/riecodes/betternaic)"
+  repo_owner: "riecodes"
+  repo_name: "betternaic"
+  socials:
+    - platform: "facebook"
+      label: "Facebook"
+      url: "https://facebook.com/betternaic"
+  status: "🔵 Planned"
+  stale: false
+  open_for_adoption: false
+  maintainer: "[@rieCodes](https://github.com/rieCodes)"
